@@ -2,20 +2,20 @@ import tkinter as tk
 from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, fuente_entrada, centrar_ventana
 
 def abrir_ventana_login():
-    # Importación local para evitar el ciclo
+    #importación local para evitar el ciclo
     from main import abrir_ventana_principal
     from register import abrir_ventana_register
 
-    # Crear la ventana de inicio de sesión
+    #crear la ventana de inicio de sesión
     ventana_login = tk.Tk()
     ventana_login.title("Inicio de Sesión")
     centrar_ventana(ventana_login)
 
-    # Agregar título
+    #agregar título
     titulo = tk.Label(ventana_login, text="Inicio de Sesión", font=fuente_titulo)
     titulo.pack(pady=(40,10)) #margen superior de 20 y margen inferior de 10
 
-    # Agregar widgets para el inicio de sesión
+    #formulario
     etiqueta_usuario = tk.Label(ventana_login, text="Usuario:", font=fuente_etiqueta)
     etiqueta_usuario.pack(pady=5)
     entrada_usuario = tk.Entry(ventana_login, font=fuente_entrada, width=30)
@@ -26,14 +26,14 @@ def abrir_ventana_login():
     entrada_contrasena = tk.Entry(ventana_login, show="*", font=fuente_entrada, width=30)
     entrada_contrasena.pack(pady=1)
 
-    # Aplicar el estilo a los botones
+    #botones
     boton_login = tk.Button(ventana_login, text="Iniciar Sesión", **estilo_boton)
     boton_login.pack(pady=10)
 
     boton_cancelar = tk.Button(ventana_login, text="Volver", **estilo_boton, command=lambda: [ventana_login.destroy(), abrir_ventana_principal()])
     boton_cancelar.pack(pady=5)
 
-    # Agregar el texto "¿No tienes cuenta?" y un link para "Regístrate"
+    #"¿No tienes cuenta?" y un link para "Regístrate"
     texto_ayuda = tk.Label(ventana_login, text="¿No tienes cuenta? ", font=fuente_etiqueta)
     texto_ayuda.pack(side="left", padx=(5, 0))
 
@@ -41,5 +41,5 @@ def abrir_ventana_login():
     link_registro.pack(side="left", padx=(0, 5))
     link_registro.bind("<Button-1>", lambda event: [ventana_login.destroy(), abrir_ventana_register()])
 
-    # Ejecutar el bucle de eventos de la ventana de inicio de sesión
+    #ejecutar el bucle de eventos de la ventana de inicio de sesión
     ventana_login.mainloop()

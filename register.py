@@ -2,21 +2,20 @@ import tkinter as tk
 from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, fuente_entrada, centrar_ventana
 
 def abrir_ventana_register():
-    # Importación local para evitar el ciclo
+    #importación local para evitar el ciclo
     from login import abrir_ventana_login
 
-    # Crear la ventana de registro
+    #crear la ventana de registro
     ventana_register = tk.Tk()
     ventana_register.title("Registro")
     centrar_ventana(ventana_register)
     ventana_register.geometry("600x500")
 
-    # Agregar título
+    #título
     titulo = tk.Label(ventana_register, text="Registro", font=fuente_titulo)
     titulo.pack(pady=(20,10))
 
     #formulario
-
     etiqueta_nombre = tk.Label(ventana_register, text="Nombre:", font=fuente_etiqueta)
     etiqueta_nombre.pack(pady=5)
     entrada_nombre = tk.Entry(ventana_register, font=fuente_entrada, width=30)
@@ -47,12 +46,12 @@ def abrir_ventana_register():
     entrada_contrasena = tk.Entry(ventana_register, show="*", font=fuente_entrada, width=30)
     entrada_contrasena.pack(pady=1)
 
-    # Botón para registrarse
+    #botones
     boton_registrar = tk.Button(ventana_register, text="Registrar", **estilo_boton)
     boton_registrar.pack(pady=10)
 
     boton_volver = tk.Button(ventana_register, text="Volver", **estilo_boton, command=lambda: [ventana_register.destroy(), abrir_ventana_login()])
     boton_volver.pack(pady=5)
 
-    # Ejecutar el bucle de eventos de la ventana de registro
+    #ejecutar el bucle de eventos de la ventana de registro
     ventana_register.mainloop()

@@ -1,6 +1,4 @@
-# Archivo estilos.py
-
-# Estilo de botones
+#estilo de botones
 estilo_boton = {
     "font": ("Arial", 10, "bold"),
     "bg": "#96bceb", #color fondo
@@ -8,7 +6,6 @@ estilo_boton = {
     "padx": 5, #margen en los lados del texto
 }
 
-# Otros estilos comunes
 fuente_titulo = ("Arial", 18, "bold")
 fuente_etiqueta = ("Arial", 10)
 fuente_entrada = ("Arial", 10)
