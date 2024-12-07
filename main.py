@@ -1,16 +1,30 @@
-# This is a sample Python script.
+import tkinter as tk
+from estilo import estilo_boton, centrar_ventana
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+def abrir_ventana_principal():
+    # Importación local para evitar el ciclo
+    from login import abrir_ventana_login
 
+    # Crear la ventana principal
+    ventana_principal = tk.Tk()
+    ventana_principal.title("Página Principal")
+    centrar_ventana(ventana_principal)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+    # Crear la barra de menú (simplemente un marco para los botones)
+    barra_menu = tk.Frame(ventana_principal, bg="#cdcdcd", height=40)
+    barra_menu.pack(fill="x")
 
+    # Agregar el botón de "Iniciar sesión" a la barra de menú
+    boton_inicio_sesion = tk.Button(barra_menu, text="Iniciar sesión", bg="#cdcdcd", bd=0, command=lambda: [ventana_principal.destroy(), abrir_ventana_login()])
+    boton_inicio_sesion.pack(side="left", padx=10, ipadx=5, ipady=5)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+    # Agregar un botón "Ver catálogo" en la ventana principal
+    boton_catalogo = tk.Button(ventana_principal, text="Ver catálogo", **estilo_boton)
+    boton_catalogo.pack(pady=20)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    # Ejecutar el bucle de eventos de la ventana principal
+    ventana_principal.mainloop()
+
+# Iniciar la ventana principal si este archivo es ejecutado directamente
+if __name__ == "__main__":
+    abrir_ventana_principal()
