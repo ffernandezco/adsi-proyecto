@@ -24,7 +24,7 @@ class GestorUsuarios:
             self.db_path = "app_database.sqlite"
             self.usuarios: List[Usuario] = []
             self._initialized = True
-            self.usuarioactual = None
+            self.usuarioactual = None     #luego se borra esto
 
     def cargar_usuarios(self):
         """
@@ -71,35 +71,54 @@ class GestorUsuarios:
             print(usuario.nombreUsuario)
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        try:
-            with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.cursor()
+        if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+            try:
+                with sqlite3.connect(self.db_path) as conn:
+                    cursor = conn.cursor()
 
-                # Intentar insertar el usuario en la base de datos
-                query = """
-                INSERT INTO usuario (nombreUsuario, contraseña, nombre, apellido, correo, fechaNacimiento)
-                VALUES (?, ?, ?, ?, ?, ?);
-                """
-                cursor.execute(query, (usuario, contrasena, nombre, apellidos, correo, fechaNacimiento))
+                    # Intentar insertar el usuario en la base de datos
+                    query = """
+                    INSERT INTO usuario (nombreUsuario, contraseña, nombre, apellido, correo, fechaNacimiento)
+                    VALUES (?, ?, ?, ?, ?, ?);
+                    """
+                    cursor.execute(query, (usuario, contrasena, nombre, apellidos, correo, fechaNacimiento))
 
-                conn.commit()
-                print("Usuario registrado exitosamente.")
-                return True
+                    conn.commit()
 
-        except sqlite3.IntegrityError as e:
-            # Detectar errores de unicidad en usuario o correo
-            if "UNIQUE" in str(e):
-                if "nombreUsuario" in str(e):
-                    messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
-                elif "correo" in str(e):
-                    messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
-            else:
-                print(f"Error de integridad: {e}")
-            return False
+                    #Añadir a la lista de usuarios del gestor
+                    # Convertir la fecha de nacimiento al tipo date
+                    """try:
+                        fecha_nacimiento = datetime.strptime(fechaNacimiento, '%Y-%m-%d').date()
+                    except ValueError:
+                        print("La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
+                        return False"""
+                    # Si los datos son válidos, realizar el registro
+                    print("Datos validados correctamente. Registro exitoso.")
+                    self.usuarios.append(Usuario(
+                        nombreUsuario=usuario,
+                        contrasena=contrasena,
+                        nombre=nombre,
+                        apellido=apellidos,
+                        correo=correo,
+                        fechaNacimiento=fechaNacimiento))
+                    print("Usuario registrado exitosamente.")
+                    return True
 
-        except sqlite3.Error as e:
-            print(f"Error al registrar el usuario: {e}")
-            return False
+            except sqlite3.IntegrityError as e:
+                # Detectar errores de unicidad en usuario o correo
+                if "UNIQUE" in str(e):
+                    if "nombreUsuario" in str(e):
+                        messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
+                    elif "correo" in str(e):
+                        messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
+                else:
+                    print(f"Error de integridad: {e}")
+                return False
+
+            except sqlite3.Error as e:
+                print(f"Error al registrar el usuario: {e}")
+                return False
+
 
     def comprobarDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         """
@@ -178,7 +197,7 @@ class GestorUsuarios:
 
         # Si el usuario existe y la contraseña es correcta
         self.usuarioactual = usuario_encontrado  # Guardar el usuario actual
-        messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido, {usuario_encontrado.nombre}!")
+        #messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido, {usuario_encontrado.nombre}!")
         return True
 
     def getNombreUsuarioActual(self):

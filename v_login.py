@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from GestorUsuarios import GestorUsuarios
+from GestorGeneral import GestorGeneral
 from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, fuente_entrada, centrar_ventana
 from v_main import abrir_ventana_principal
 
@@ -56,11 +56,11 @@ def pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena):
         messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
         return  # No continuar con el inicio de sesión
 
-    # Crear instancia de GestorUsuarios
-    gestor_usuarios = GestorUsuarios()
+    # obtener instancia de GestorGeneral
+    gestor_general = GestorGeneral()
 
     # Intentar iniciar sesión
-    if gestor_usuarios.iniciarsesion(usuario, contrasena):
+    if gestor_general.iniciarsesion(usuario, contrasena):
         messagebox.showinfo("Inicio de Sesión", "Inicio de sesión exitoso")
         ventana_login.destroy()
         abrir_ventana_principal()
