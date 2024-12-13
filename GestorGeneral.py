@@ -17,7 +17,7 @@ class GestorGeneral:
             self.usuarioactual = None
 
     def cargar_datos(self):
-        # Aquí 'self' se refiere a la instancia de GestorGeneral que está llamando el método
+        # Aquí 'self' se refiere a la instancia de GestorGeneral que está llamando el metodo
         print("Cargando datos de usuarios...")
 
 
