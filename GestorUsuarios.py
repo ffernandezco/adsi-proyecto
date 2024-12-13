@@ -21,7 +21,7 @@ class GestorUsuarios:
             Inicializa el GestorUsuarios con una conexión a la base de datos.
             :param db_path: Ruta al archivo de la base de datos SQLite.
             """
-            self.db_path = "DB_PATHHHHHHHHHHHHHH"
+            self.db_path = "app_database.sqlite"
             self.usuarios: List[Usuario] = []
             self._initialized = True
             self.usuarioactual = None
@@ -71,28 +71,34 @@ class GestorUsuarios:
             print(usuario)
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-            # Convertir la fecha de nacimiento al tipo date
-            """try:
-                fecha_nacimiento = datetime.strptime(fechaNacimiento, '%Y-%m-%d').date()
-            except ValueError:
-                print("La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
-                return False"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
 
-            # Si los datos son válidos, realizar el registro
-            print("Datos validados correctamente. Registro exitoso.")
-            self.usuarios.append(Usuario(
-                nombreUsuario=usuario,
-                contraseña=contrasena,
-                nombre=nombre,
-                apellido=apellidos,
-                correo=correo,
-                fechaNacimiento=fechaNacimiento
-                #fechaNacimiento=fecha_nacimiento
-            ))
-            return True
-        else:
-            print("Los datos no son válidos. Registro fallido.")
+                # Intentar insertar el usuario en la base de datos
+                query = """
+                INSERT INTO usuario (nombreUsuario, contraseña, nombre, apellido, correo, fechaNacimiento)
+                VALUES (?, ?, ?, ?, ?, ?);
+                """
+                cursor.execute(query, (usuario, contrasena, nombre, apellidos, correo, fechaNacimiento))
+
+                conn.commit()
+                print("Usuario registrado exitosamente.")
+                return True
+
+        except sqlite3.IntegrityError as e:
+            # Detectar errores de unicidad en usuario o correo
+            if "UNIQUE" in str(e):
+                if "nombreUsuario" in str(e):
+                    messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
+                elif "correo" in str(e):
+                    messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
+            else:
+                print(f"Error de integridad: {e}")
+            return False
+
+        except sqlite3.Error as e:
+            print(f"Error al registrar el usuario: {e}")
             return False
 
     def comprobarDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):

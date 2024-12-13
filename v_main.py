@@ -1,5 +1,55 @@
+import sqlite3
 import tkinter as tk
 from estilo import estilo_boton, centrar_ventana
+
+# Inicialización básica de la base de datos
+def initialize_database(db_name="app_database.sqlite"):
+    try:
+        # Conexión a la base de datos SQLite
+        conn = sqlite3.connect(db_name)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS usuario (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombreUsuario TEXT UNIQUE NOT NULL,
+            contraseña TEXT NOT NULL,
+            nombre TEXT NOT NULL,
+            apellido TEXT NOT NULL,
+            correo TEXT UNIQUE NOT NULL,
+            fechaNacimiento DATE,
+            esAdministrador BOOLEAN DEFAULT 0,
+            estaAceptado BOOLEAN DEFAULT 0,
+            estaEliminado BOOLEAN DEFAULT 0,
+            aceptadoPorAdmin INTEGER,
+            eliminadoPorAdmin INTEGER,
+            FOREIGN KEY (aceptadoPorAdmin) REFERENCES usuario (id),
+            FOREIGN KEY (eliminadoPorAdmin) REFERENCES usuario (id)
+        );
+        """)
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS pelicula (
+            titulo TEXT NOT NULL,
+            ano INTEGER NOT NULL,
+            director TEXT,
+            duracion INTEGER,
+            descripcion TEXT,
+            idUsuario INTEGER NOT NULL,
+            PRIMARY KEY (titulo, ano),
+            FOREIGN KEY (idUsuario) REFERENCES usuario (id) ON DELETE CASCADE
+        );
+        """)
+
+        # Confirmar cambios
+        conn.commit()
+        print("Base de datos inicializada correctamente.")
+
+    except sqlite3.Error as e:
+        print(f"Error al inicializar la base de datos: {e}")
+    finally:
+        if conn:
+            conn.close()
 
 def abrir_ventana_principal():
     #importación local para evitar el ciclo
@@ -36,4 +86,5 @@ def abrir_ventana_principal():
 
 #iniciar la ventana principal si este archivo es ejecutado directamente
 if __name__ == "__main__":
+    initialize_database()
     abrir_ventana_principal()

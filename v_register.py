@@ -59,24 +59,24 @@ def abrir_ventana_register():
 def pulsar_registrarse(ventana_register, entrada_nombre, entrada_apellidos, entrada_correo, entrada_fechaNac,
                        entrada_usuario, entrada_contrasena):
     # Obtener los datos de los campos de entrada
-    nombre = entrada_nombre.get()
-    apellidos = entrada_apellidos.get()
-    correo = entrada_correo.get()
-    fecha_nacimiento = entrada_fechaNac.get()
-    usuario = entrada_usuario.get()
-    contrasena = entrada_contrasena.get()
+    nombre = entrada_nombre.get().strip()
+    apellidos = entrada_apellidos.get().strip()
+    correo = entrada_correo.get().strip()
+    fecha_nacimiento = entrada_fechaNac.get().strip()
+    usuario = entrada_usuario.get().strip()
+    contrasena = entrada_contrasena.get().strip()
 
     # Comprobar si algún campo está vacío
-    if not nombre or not apellidos or not correo or not fecha_nacimiento or not usuario or not contrasena:
-        messagebox.showinfo("Alerta","Todos los campos son obligatorios")
-        return  # No continuar con el registro
+    if not all([nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena]):
+        messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
+        return
 
-    # Crear instancia de GestorUsuarios para pasarle a pulsar_registrarse
+    # Crear instancia de GestorUsuarios y registrar al usuario
     gestor_usuarios = GestorUsuarios()
 
-    # Llamar al metodo registrarse de la clase GestorUsuarios
     if gestor_usuarios.registrarse(nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena):
-        messagebox.showinfo("Alerta","Registro exitoso")
+        messagebox.showinfo("Éxito", "Registro exitoso")
         ventana_register.destroy()
         abrir_ventana_principal()
-        #nueva ventana main con sesion iniciada
+    else:
+        messagebox.showinfo("Error", "No se pudo registrar el usuario. Verifique los datos e intente nuevamente.")
