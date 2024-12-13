@@ -43,6 +43,45 @@ def initialize_database(db_name="app_database.sqlite"):
         );
         """)
 
+        cursor.execute("""
+                CREATE TABLE IF NOT EXISTS solicitudes (
+                    idUsuario INTEGER NOT NULL,
+                    titulo TEXT NOT NULL,
+                    ano INTEGER NOT NULL,
+                    PRIMARY KEY (idUsuario, titulo, ano),
+                    FOREIGN KEY (idUsuario) REFERENCES usuario (id) ON DELETE CASCADE,
+                    FOREIGN KEY (titulo) REFERENCES pelicula (titulo) ON DELETE CASCADE,
+                    FOREIGN KEY (ano) REFERENCES pelicula (ano) ON DELETE CASCADE
+                );
+                """)
+
+        cursor.execute("""
+                CREATE TABLE IF NOT EXISTS alquileres (
+                    idUsuario INTEGER NOT NULL,
+                    titulo TEXT NOT NULL,
+                    ano INTEGER NOT NULL,
+                    fecha DATE NOT NULL,
+                    PRIMARY KEY (idUsuario, titulo, ano, fecha),
+                    FOREIGN KEY (idUsuario) REFERENCES usuario (id) ON DELETE CASCADE,
+                    FOREIGN KEY (titulo) REFERENCES pelicula (titulo) ON DELETE CASCADE,
+                    FOREIGN KEY (ano) REFERENCES pelicula (ano) ON DELETE CASCADE
+                );
+                """)
+
+        cursor.execute("""
+                CREATE TABLE IF NOT EXISTS resenas (
+                    idUsuario INTEGER NOT NULL,
+                    titulo TEXT NOT NULL,
+                    ano INTEGER NOT NULL,
+                    puntuacion INTEGER,
+                    comentario TEXT,
+                    PRIMARY KEY (idUsuario, titulo, ano),
+                    FOREIGN KEY (idUsuario) REFERENCES usuario (id) ON DELETE CASCADE,
+                    FOREIGN KEY (titulo) REFERENCES pelicula (titulo) ON DELETE CASCADE,
+                    FOREIGN KEY (ano) REFERENCES pelicula (ano) ON DELETE CASCADE
+                );
+                """)
+
         # Confirmar cambios
         conn.commit()
         print("Base de datos inicializada correctamente.")
