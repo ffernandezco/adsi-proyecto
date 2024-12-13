@@ -1,8 +1,8 @@
 #estilo de botones
 estilo_boton = {
     "font": ("Arial", 10, "bold"),
-    "bg": "#96bceb", #color fondo
-    "fg": "white", #color del texto
+    "bg": "white", #color fondo
+    "fg": "black", #color del texto
     "padx": 5, #margen en los lados del texto
 }
 
