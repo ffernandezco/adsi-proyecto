@@ -87,7 +87,7 @@ class GestorUsuarios:
         Imprime una lista de todos los usuarios cargados.
         """
         for usuario in self.usuarios:
-            print(usuario.nombreUsuario)
+            print(usuario.nombreUsuario, usuario.idUsuario)
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
@@ -98,13 +98,18 @@ class GestorUsuarios:
                     # Intentar insertar el usuario en la base de datos
                     query = """
                     INSERT INTO usuario (nombreUsuario, contraseña, nombre, apellido, correo, fechaNacimiento)
-                    VALUES (?, ?, ?, ?, ?, ?);
-                    """
+                    VALUES (?, ?, ?, ?, ?, ?);"""
                     cursor.execute(query, (usuario, contrasena, nombre, apellidos, correo, fechaNacimiento))
-
                     conn.commit()
 
                     #Añadir a la lista de usuarios del gestor
+                    query = """
+                    SELECT id FROM usuario WHERE nombreUsuario = ? AND estaEliminado = ?;"""
+                    cursor.execute(query, (usuario, False))
+                    resultado = cursor.fetchone()
+                    if resultado:
+                        id_usuario = resultado[0]
+
                     # Convertir la fecha de nacimiento al tipo date
                     try:
                         fecha_nacimiento = datetime.strptime(fechaNacimiento, '%Y-%m-%d').date()
@@ -114,6 +119,7 @@ class GestorUsuarios:
                     # Si los datos son válidos, realizar el registro
                     print("Datos validados correctamente. Registro exitoso.")
                     self.usuarios.append(Usuario(
+                        idUsuario=id_usuario,
                         nombreUsuario=usuario,
                         contrasena=contrasena,
                         nombre=nombre,

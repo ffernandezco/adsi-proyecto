@@ -90,5 +90,3 @@ def pulsar_registrarse(ventana_register, entrada_nombre, entrada_apellidos, entr
         messagebox.showinfo("Éxito", "Registro exitoso")
         ventana_register.destroy()
         abrir_ventana_principal()
-    else:
-        messagebox.showinfo("Error", "No se pudo registrar el usuario. Verifique los datos e intente nuevamente.")

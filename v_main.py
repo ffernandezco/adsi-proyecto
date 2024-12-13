@@ -115,9 +115,9 @@ def abrir_ventana_principal():
     # Obtener el nombre del usuario actual
     nombreUsuario_actual = GestorGeneral.nombusuarioactual
     #print("NombreUsuario_actual: ", nombreUsuario_actual)
-    #from GestorUsuarios import GestorUsuarios
-    #print("Usuarios de GestorUsuarios")
-    #GestorUsuarios.get_instance().listar_usuarios()
+    from GestorUsuarios import GestorUsuarios
+    print("Usuarios de GestorUsuarios")
+    GestorUsuarios.get_instance().listar_usuarios()
 
     #agregar botones a la barra de menú
     if nombreUsuario_actual is None:
