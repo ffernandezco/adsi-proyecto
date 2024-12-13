@@ -1,5 +1,7 @@
 import sqlite3
 import tkinter as tk
+
+from GestorUsuarios import GestorUsuarios
 from estilo import estilo_boton, centrar_ventana
 
 # Inicialización básica de la base de datos
@@ -80,6 +82,15 @@ def abrir_ventana_principal():
     #agregar botones de ver catálogo y ver catálogo ampliado uno al lado del otro
     tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton).pack(side="left", padx=10)
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
+
+    # Crear una instancia del gestor de usuarios
+    gestor_usuarios = GestorUsuarios()
+
+    # Obtener el nombre del usuario actual
+    nombre_usuario_actual = gestor_usuarios.usuarioactual.nombreUsuario if gestor_usuarios.usuarioactual else "inicie sesión"
+
+    # Crear el botón con el texto dinámico
+    tk.Label(text=f"Bienvenido, {nombre_usuario_actual}").pack(pady=10)
 
     #ejecutar el bucle de eventos de la ventana principal
     ventana_principal.mainloop()

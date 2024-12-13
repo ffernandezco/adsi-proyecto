@@ -68,7 +68,7 @@ class GestorUsuarios:
         Imprime una lista de todos los usuarios cargados.
         """
         for usuario in self.usuarios:
-            print(usuario)
+            print(usuario.nombreUsuario)
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         try:
@@ -110,6 +110,7 @@ class GestorUsuarios:
         - Usuario no vacío.
         - Contraseña valida.
         """
+
         if (1==1): return True
 
         # Validar nombre y apellidos (solo letras)
@@ -153,3 +154,33 @@ class GestorUsuarios:
 
         # Si todas las validaciones pasan
         return True
+
+    def iniciarsesion(self, usuarioIn, contrasenaIn):
+        """
+        Valida las credenciales de inicio de sesión.
+        :param usuario: Nombre de usuario proporcionado.
+        :param contrasena: Contraseña proporcionada.
+        :return: True si las credenciales son válidas, False en caso contrario.
+        """
+        # Buscar al usuario por nombre de usuario en la lista de usuarios
+        usuario_encontrado = next((u for u in self.usuarios if u.esUsuario(usuarioIn)), None)
+
+        if usuario_encontrado is None:
+            # Si no se encuentra el usuario, mostrar un mensaje
+            messagebox.showinfo("Error de inicio de sesión", "Usuario no encontrado.")
+            return False
+
+        # Validar la contraseña
+        if usuario_encontrado.comprobarContrasena(contrasenaIn):
+            # Si la contraseña no coincide, mostrar un mensaje
+            messagebox.showinfo("Error de inicio de sesión", "Contraseña incorrecta.")
+            return False
+
+        # Si el usuario existe y la contraseña es correcta
+        self.usuarioactual = usuario_encontrado  # Guardar el usuario actual
+        messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido, {usuario_encontrado.nombre}!")
+        return True
+
+    def getNombreUsuarioActual(self):
+        return self.usuarioactual.get_nombreUsuario()
+
