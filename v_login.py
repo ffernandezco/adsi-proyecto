@@ -1,9 +1,13 @@
 import tkinter as tk
+from tkinter import messagebox
+
+from GestorUsuarios import GestorUsuarios
 from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, fuente_entrada, centrar_ventana
+from v_main import abrir_ventana_principal
+
 
 def abrir_ventana_login():
     #importación local para evitar el ciclo
-    from v_main import abrir_ventana_principal
     from v_register import abrir_ventana_register
 
     #crear la ventana de inicio de sesión
@@ -24,7 +28,7 @@ def abrir_ventana_login():
     entrada_contrasena.pack(pady=1)
 
     #botones
-    tk.Button(ventana_login, text="Iniciar Sesión", **estilo_boton).pack(pady=10)
+    tk.Button(ventana_login, text="Iniciar Sesión", **estilo_boton, command=lambda: pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena)).pack(pady=10)
 
     tk.Button(ventana_login, text="Volver", **estilo_boton, command=lambda: [ventana_login.destroy(), abrir_ventana_principal()]).pack(pady=5)
 
@@ -37,3 +41,26 @@ def abrir_ventana_login():
 
     #ejecutar el bucle de eventos de la ventana de inicio de sesión
     ventana_login.mainloop()
+
+
+def pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena):
+    """
+    Lógica para el botón "Iniciar Sesión".
+    """
+    # Obtener los datos de los campos de entrada
+    usuario = entrada_usuario.get()
+    contrasena = entrada_contrasena.get()
+
+    # Comprobar si algún campo está vacío
+    if not usuario or not contrasena:
+        messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
+        return  # No continuar con el inicio de sesión
+
+    # Crear instancia de GestorUsuarios
+    gestor_usuarios = GestorUsuarios()
+
+    # Intentar iniciar sesión
+    if gestor_usuarios.iniciarsesion(usuario, contrasena):
+        messagebox.showinfo("Inicio de Sesión", "Inicio de sesión exitoso")
+        ventana_login.destroy()
+        abrir_ventana_principal()
