@@ -4,6 +4,7 @@ from datetime import datetime
 from tkinter import messagebox
 from typing import List, Optional
 from datetime import date
+
 from Usuario import Usuario
 
 class GestorUsuarios:
@@ -24,7 +25,6 @@ class GestorUsuarios:
             self.db_path = "app_database.sqlite"
             self.usuarios: List[Usuario] = []
             self._initialized = True
-            self.usuarioactual = None     #luego se borra esto
 
     def cargar_usuarios(self):
         """
@@ -174,7 +174,7 @@ class GestorUsuarios:
         # Si todas las validaciones pasan
         return True
 
-    def iniciarsesion(self, usuarioIn, contrasenaIn):
+    def iniciarsesion(self, nombreUsuarioIn, contrasenaIn):
         """
         Valida las credenciales de inicio de sesión.
         :param usuario: Nombre de usuario proporcionado.
@@ -182,7 +182,7 @@ class GestorUsuarios:
         :return: True si las credenciales son válidas, False en caso contrario.
         """
         # Buscar al usuario por nombre de usuario en la lista de usuarios
-        usuario_encontrado = next((u for u in self.usuarios if u.esUsuario(usuarioIn)), None)
+        usuario_encontrado = self.buscarUsuario(nombreUsuarioIn)
 
         if usuario_encontrado is None:
             # Si no se encuentra el usuario, mostrar un mensaje
@@ -190,16 +190,17 @@ class GestorUsuarios:
             return False
 
         # Validar la contraseña
-        if usuario_encontrado.comprobarContrasena(contrasenaIn):
+        if not usuario_encontrado.comprobarContrasena(contrasenaIn): #si la contraseña es incorrecta error
             # Si la contraseña no coincide, mostrar un mensaje
             messagebox.showinfo("Error de inicio de sesión", "Contraseña incorrecta.")
             return False
 
+        from GestorGeneral import GestorGeneral #no puede estar arriba porque si no hay dependencia circular
         # Si el usuario existe y la contraseña es correcta
-        self.usuarioactual = usuario_encontrado  # Guardar el usuario actual
+        GestorGeneral().setNombreUsuarioActual(usuario_encontrado.getNombreUsuario()) # Guardar el usuario actual
         #messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido, {usuario_encontrado.nombre}!")
         return True
 
-    def getNombreUsuarioActual(self):
-        return self.usuarioactual.get_nombreUsuario()
+    def buscarUsuario(self,nombrUsuarioIn):
+        return next((u for u in self.usuarios if u.esUsuario(nombrUsuarioIn)), None)
 

@@ -28,3 +28,6 @@ class Usuario:
 
     def comprobarContrasena(self,contrasenaIn):
         return contrasenaIn==self.contrasena
+
+    def getNombreUsuario(self):
+        return self.nombreUsuario

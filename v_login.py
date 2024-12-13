@@ -48,19 +48,17 @@ def pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena):
     Lógica para el botón "Iniciar Sesión".
     """
     # Obtener los datos de los campos de entrada
-    usuario = entrada_usuario.get()
-    contrasena = entrada_contrasena.get()
+    usuario = entrada_usuario.get().strip()
+    contrasena = entrada_contrasena.get().strip()
 
     # Comprobar si algún campo está vacío
     if not usuario or not contrasena:
         messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
         return  # No continuar con el inicio de sesión
 
-    # obtener instancia de GestorGeneral
-    gestor_general = GestorGeneral()
 
     # Intentar iniciar sesión
-    if gestor_general.iniciarsesion(usuario, contrasena):
+    if GestorGeneral().iniciarsesion(usuario, contrasena):
         messagebox.showinfo("Inicio de Sesión", "Inicio de sesión exitoso")
         ventana_login.destroy()
         abrir_ventana_principal()

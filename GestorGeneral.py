@@ -25,13 +25,18 @@ class GestorGeneral:
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         return GestorUsuarios().registrarse(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
 
-    def iniciarsesion(self, usuarioIn, contrasenaIn):
-        if GestorUsuarios().iniciarsesion(usuarioIn, contrasenaIn):
-            self.usuarioactual = GestorUsuarios.getNombreUsuarioActual()
+    def iniciarsesion(self, nombreUsuarioIn, contrasenaIn):
+        if GestorUsuarios().iniciarsesion(nombreUsuarioIn, contrasenaIn):
+            self.usuarioactual = GestorUsuarios().buscarUsuario(nombreUsuarioIn).getNombreUsuario()
             return True
         else:
             return False
 
 
     def getNombreUsuarioActual(self):
-        return self.usuarioactual.get_nombreUsuario()
+        return self.usuarioactual
+
+    def setNombreUsuarioActual(self,nombreUsuario):
+        self.usuarioactual=nombreUsuario
+
+

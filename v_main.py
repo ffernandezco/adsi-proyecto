@@ -2,7 +2,6 @@ import sqlite3
 import tkinter as tk
 
 from GestorGeneral import GestorGeneral
-from GestorUsuarios import GestorUsuarios
 from estilo import estilo_boton, centrar_ventana
 
 # Inicialización básica de la base de datos
@@ -127,7 +126,7 @@ def abrir_ventana_principal():
     gestor_general = GestorGeneral()
 
     # Obtener el nombre del usuario actual
-    nombre_usuario_actual = gestor_general.usuarioactual.nombreUsuario if gestor_general.usuarioactual else "inicie sesión"
+    nombre_usuario_actual = gestor_general.getNombreUsuarioActual() if gestor_general.usuarioactual else "inicie sesión"
 
     # Crear el botón con el texto dinámico
     tk.Label(text=f"Bienvenido, {nombre_usuario_actual}").pack(pady=10)
