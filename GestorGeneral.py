@@ -1,8 +1,11 @@
+from tkinter import messagebox
+
 from GestorUsuarios import GestorUsuarios
 
 
 class GestorGeneral:
     _instance = None  # Variable de clase para almacenar la única instancia
+    nombusuarioactual = None  # Atributo estático
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -14,29 +17,34 @@ class GestorGeneral:
         if not self._initialized:  # Evitar inicializar múltiples veces
             self.db_path = "app_database.sqlite"
             self._initialized = True
-            self.usuarioactual = None
+
+    @staticmethod
+    def get_instance():
+        if GestorGeneral._instance is None:
+            GestorGeneral._instance = GestorGeneral()
+        return GestorGeneral._instance
 
     def cargar_datos(self):
         # Aquí 'self' se refiere a la instancia de GestorGeneral que está llamando el metodo
-        print("Cargando datos de usuarios...")
+        print("Cargando datos de bd...")
+        GestorUsuarios.get_instance().cargar_usuarios()
+
 
 
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        return GestorUsuarios().registrarse(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
+        return GestorUsuarios.get_instance().registrarse(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
 
     def iniciarsesion(self, nombreUsuarioIn, contrasenaIn):
-        if GestorUsuarios().iniciarsesion(nombreUsuarioIn, contrasenaIn):
-            self.usuarioactual = GestorUsuarios().buscarUsuario(nombreUsuarioIn).getNombreUsuario()
+        if GestorUsuarios.get_instance().iniciarsesion(nombreUsuarioIn, contrasenaIn):
+            GestorGeneral.nombusuarioactual = GestorUsuarios.get_instance().buscarUsuario(nombreUsuarioIn).getNombreUsuario()
             return True
         else:
             return False
 
+    def obtener_usuario(self):
+        return GestorUsuarios.get_instance().buscarUsuario(GestorGeneral.nombusuarioactual)
 
-    def getNombreUsuarioActual(self):
-        return self.usuarioactual
-
-    def setNombreUsuarioActual(self,nombreUsuario):
-        self.usuarioactual=nombreUsuario
-
+    def obtener_datos_usuario(self):
+        return self.obtener_usuario().getDatos()
 

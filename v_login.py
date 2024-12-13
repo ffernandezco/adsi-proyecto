@@ -58,7 +58,7 @@ def pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena):
 
 
     # Intentar iniciar sesión
-    if GestorGeneral().iniciarsesion(usuario, contrasena):
+    if GestorGeneral.get_instance().iniciarsesion(usuario, contrasena):
         messagebox.showinfo("Inicio de Sesión", "Inicio de sesión exitoso")
         ventana_login.destroy()
         abrir_ventana_principal()

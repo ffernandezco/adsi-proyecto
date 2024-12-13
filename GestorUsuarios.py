@@ -26,6 +26,12 @@ class GestorUsuarios:
             self.usuarios: List[Usuario] = []
             self._initialized = True
 
+    @staticmethod
+    def get_instance():
+        if GestorUsuarios._instance is None:
+            GestorUsuarios._instance = GestorUsuarios()
+        return GestorUsuarios._instance
+
     def cargar_usuarios(self):
         """
         Carga los usuarios desde la base de datos y los guarda en la lista interna `usuarios`.
@@ -34,10 +40,10 @@ class GestorUsuarios:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 query = """
-                    SELECT idUsuario, nombreUsuario, contrasena, nombre, apellido, correo,
+                    SELECT id, nombreUsuario, contraseña, nombre, apellido, correo,
                            fechaNacimiento, esAdministrador, estaAceptado, estaEliminado,
                            aceptadoPorAdmin, eliminadoPorAdmin
-                    FROM Usuarios;
+                    FROM usuario;
                 """
                 cursor.execute(query)
                 rows = cursor.fetchall()
@@ -63,6 +69,19 @@ class GestorUsuarios:
         except sqlite3.Error as e:
             print(f"Error al cargar los usuarios desde la base de datos: {e}")
 
+    def obtener_usuario_por_id(self, id_usuario: Optional[int]) -> Optional[Usuario]:
+        """
+        Encuentra un usuario por su ID en la lista de usuarios cargados.
+        :param id_usuario: ID del usuario a buscar.
+        :return: Usuario encontrado o None si no existe.
+        """
+        if id_usuario is None:
+            return None
+        for usuario in self.usuarios:
+            if usuario.getIdUsuario() == id_usuario:
+                return usuario
+        return None
+
     def listar_usuarios(self):
         """
         Imprime una lista de todos los usuarios cargados.
@@ -87,11 +106,11 @@ class GestorUsuarios:
 
                     #Añadir a la lista de usuarios del gestor
                     # Convertir la fecha de nacimiento al tipo date
-                    """try:
+                    try:
                         fecha_nacimiento = datetime.strptime(fechaNacimiento, '%Y-%m-%d').date()
                     except ValueError:
                         print("La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
-                        return False"""
+                        return False
                     # Si los datos son válidos, realizar el registro
                     print("Datos validados correctamente. Registro exitoso.")
                     self.usuarios.append(Usuario(
@@ -130,15 +149,13 @@ class GestorUsuarios:
         - Contraseña valida.
         """
 
-        if (1==1): return True
-
         # Validar nombre y apellidos (solo letras)
         if not re.match("^[A-Za-záéíóúÁÉÍÓÚñÑ]+$", nombre):
             messagebox.showinfo("Alerta", "El nombre solo debe contener letras.")
             return False
 
-        if not re.match("^[A-Za-záéíóúÁÉÍÓÚñÑ]+$", apellidos):
-            messagebox.showinfo("Alerta", "Los apellidos solo deben contener letras.")
+        if not re.match(r"^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$", apellidos):
+            messagebox.showinfo("Alerta", "Los apellidos solo deben contener letras y espacios.")
             return False
 
         # Validar correo (letras@letras.letras)
@@ -194,11 +211,6 @@ class GestorUsuarios:
             # Si la contraseña no coincide, mostrar un mensaje
             messagebox.showinfo("Error de inicio de sesión", "Contraseña incorrecta.")
             return False
-
-        from GestorGeneral import GestorGeneral #no puede estar arriba porque si no hay dependencia circular
-        # Si el usuario existe y la contraseña es correcta
-        GestorGeneral().setNombreUsuarioActual(usuario_encontrado.getNombreUsuario()) # Guardar el usuario actual
-        #messagebox.showinfo("Inicio de sesión exitoso", f"Bienvenido, {usuario_encontrado.nombre}!")
         return True
 
     def buscarUsuario(self,nombrUsuarioIn):
