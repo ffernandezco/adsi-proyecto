@@ -238,7 +238,6 @@ class GestorUsuarios:
             for usuario in self.usuarios
             if not usuario.estaElimin() and not usuario.estaAcept() and not usuario.esAdmin()
         ]
-        print(nombres_usuarios_pendientes)
 
         # Convertir la lista de nombres a formato JSON y devolverla
         return json.dumps(nombres_usuarios_pendientes, ensure_ascii=False)
