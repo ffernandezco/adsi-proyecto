@@ -214,7 +214,7 @@ class GestorUsuarios:
             return False
 
         if not usuario_encontrado.estaAcept():
-            messagebox.showinfo("Error de inicio de sesión", "La solicitud de usuario no ha sido aceptada.")
+            messagebox.showinfo("Error de inicio de sesión", "No puede acceder, su solicitud no ha sido aceptada.")
             return False
 
         # Validar la contraseña
@@ -242,13 +242,13 @@ class GestorUsuarios:
         # Convertir la lista de nombres a formato JSON y devolverla
         return json.dumps(nombres_usuarios_pendientes, ensure_ascii=False)
 
-    def aceptSoliRegistro(self, nombreSoliUsuario):
+    def aceptSoliRegistro(self, idAdminAceptador, nombreSoliUsuario):
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 # Intentar insertar el usuario en la base de datos
-                query = """UPDATE usuario SET estaAceptado=TRUE WHERE nombreUsuario=?"""
-                cursor.execute(query, (nombreSoliUsuario))
+                query = """UPDATE usuario SET estaAceptado=TRUE, aceptadoPorAdmin = ? WHERE nombreUsuario=?"""
+                cursor.execute(query, (idAdminAceptador, nombreSoliUsuario))
                 conn.commit()
                 self.buscarUsuario(nombreSoliUsuario).aceptar()
                 print("Usuario aceptado exitosamente.")

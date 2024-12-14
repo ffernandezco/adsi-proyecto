@@ -56,3 +56,5 @@ class Usuario:
 
     def aceptar(self):
         self.estaAceptado = True
+        from GestorGeneral import GestorGeneral
+        self.aceptadoPorAdmin = GestorGeneral.get_instance().obtener_usuario().getIdUsuario()

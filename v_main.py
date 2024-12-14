@@ -137,7 +137,7 @@ def abrir_ventana_principal():
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
 
     if nombreUsuario_actual is not None:
-        tk.Label(text=f"Bienvenido, {nombreUsuario_actual}").pack(pady=10)
+        tk.Label(text=f"Bienvenido/a, {nombreUsuario_actual}").pack(pady=10)
         tk.Label(text=f"AQUÍ VAN LAS PELICULAS ALQUILADAS POR EL USUARIO EN LAS ÚLTIMAS 48H").pack(pady=10)
 
     #ejecutar el bucle de eventos de la ventana principal
