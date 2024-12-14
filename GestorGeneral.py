@@ -48,3 +48,8 @@ class GestorGeneral:
     def obtener_datos_usuario(self):
         return self.obtener_usuario().getDatos()
 
+    def obtenerSoliRegistros(self):
+        return GestorUsuarios.get_instance().getSoliRegistros()
+
+    def aceptarSoliRegistro(self,nombreSoliUsuario):
+        GestorUsuarios.get_instance().aceptSoliRegistro(nombreSoliUsuario)

@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import re
 from datetime import datetime
@@ -212,6 +213,10 @@ class GestorUsuarios:
             messagebox.showinfo("Error de inicio de sesión", "Usuario no encontrado.")
             return False
 
+        if not usuario_encontrado.estaAcept():
+            messagebox.showinfo("Error de inicio de sesión", "La solicitud de usuario no ha sido aceptada.")
+            return False
+
         # Validar la contraseña
         if not usuario_encontrado.comprobarContrasena(contrasenaIn): #si la contraseña es incorrecta error
             # Si la contraseña no coincide, mostrar un mensaje
@@ -220,5 +225,37 @@ class GestorUsuarios:
         return True
 
     def buscarUsuario(self,nombrUsuarioIn):
-        return next((u for u in self.usuarios if u.esUsuario(nombrUsuarioIn)), None)
+        #buscar usuario por nombre de usuario que no esté eliminado
+        return next((u for u in self.usuarios if u.esUsuario(nombrUsuarioIn) and not u.estaElimin()), None)
+
+    def getSoliRegistros(self):
+        """
+        Devuelve una lista de nombres de usuario en formato JSON cuyos atributos `estaEliminado` son False y `estaAceptado` son False.
+        """
+        # Filtrar los usuarios que cumplen con las condiciones
+        nombres_usuarios_pendientes = [
+            usuario.getNombreUsuario()
+            for usuario in self.usuarios
+            if not usuario.estaElimin() and not usuario.estaAcept() and not usuario.esAdmin()
+        ]
+        print(nombres_usuarios_pendientes)
+
+        # Convertir la lista de nombres a formato JSON y devolverla
+        return json.dumps(nombres_usuarios_pendientes, ensure_ascii=False)
+
+    def aceptSoliRegistro(self, nombreSoliUsuario):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                # Intentar insertar el usuario en la base de datos
+                query = """UPDATE usuario SET estaAceptado=TRUE WHERE nombreUsuario=?"""
+                cursor.execute(query, (nombreSoliUsuario))
+                conn.commit()
+                self.buscarUsuario(nombreSoliUsuario).aceptar()
+                print("Usuario aceptado exitosamente.")
+        except sqlite3.Error as e:
+            print(f"Error al aceptar el usuario: {e}")
+
+
+
 

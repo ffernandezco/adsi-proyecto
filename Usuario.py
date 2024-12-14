@@ -54,3 +54,5 @@ class Usuario:
         # Devolver el diccionario como JSON
         return json.dumps(data)
 
+    def aceptar(self):
+        self.estaAceptado = True
