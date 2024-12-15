@@ -26,6 +26,9 @@ class Usuario:
     def getIdUsuario(self):
         return self.idUsuario
 
+    def getCorreo(self):
+        return self.correo
+
     def esAdmin(self):
         return self.esAdministrador
 
@@ -47,7 +50,7 @@ class Usuario:
             'nombre': self.nombre,
             'apellido': self.apellido,
             'correo': self.correo,
-            'fechaNacimiento': self.fechaNacimiento.isoformat(),  # Convertir la fecha a formato string
+            'fechaNacimiento': self.fechaNacimiento,  # Convertir la fecha a formato string
             'nombreUsuario': self.nombreUsuario,
             'contrasena': self.contrasena
         }
@@ -57,4 +60,17 @@ class Usuario:
     def aceptar(self):
         self.estaAceptado = True
         from GestorGeneral import GestorGeneral
-        self.aceptadoPorAdmin = GestorGeneral.get_instance().obtener_usuario().getIdUsuario()
+        self.aceptadoPorAdmin = GestorGeneral.get_instance().obtener_usuarioAct().getIdUsuario()
+
+    def eliminar(self):
+        self.estaEliminado = True
+        from GestorGeneral import GestorGeneral
+        self.eliminadoPorAdminm = GestorGeneral.get_instance().obtener_usuarioAct().getIdUsuario()
+
+    def modificar(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+        self.nombreUsuario = nombre
+        self.apellido = apellidos
+        self.correo = correo
+        self.fechaNacimiento = fechaNacimiento
+        self.usuario = usuario
+        self.contrasena = contrasena

@@ -1,5 +1,6 @@
 import json
 import tkinter as tk
+from tkinter import messagebox
 
 from GestorGeneral import GestorGeneral
 from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, centrar_ventana, fuente_entrada
@@ -37,7 +38,7 @@ def abrir_ventana_modDatos():
     tk.Label(ventana_modDatos, text="Modificar Usuario", font=fuente_titulo).pack(pady=10)
 
     # Simula obtener datos del usuario (esto debería ser un JSON válido)
-    usuario_json = obtener_datos_usuario()
+    usuario_json = GestorGeneral.get_instance().obtener_datos_usuario()
     jsonDatosUsuario = json.loads(usuario_json)
     #print(jsonDatosUsuario)
 
@@ -82,10 +83,27 @@ def abrir_ventana_modDatos():
         entrada_contrasena.insert(0, jsonDatosUsuario["contrasena"])  # Inserta el valor del JSON
     entrada_contrasena.pack(pady=1)
 
-    tk.Button(ventana_modDatos, text="Guardar Cambios", **estilo_boton).pack(pady=10)
+    tk.Button(ventana_modDatos, text="Guardar Cambios", **estilo_boton, command=lambda: pulsar_guardar_cambios(ventana_modDatos, entrada_nombre,
+                                                       entrada_apellidos, entrada_correo, entrada_fechaNac, entrada_usuario, entrada_contrasena)).pack(pady=10)
     tk.Button(ventana_modDatos, text="Volver", **estilo_boton, command=lambda: [ventana_modDatos.destroy(), abrir_ventana_principal()]).pack(pady=10)
 
     ventana_modDatos.mainloop()
 
-def obtener_datos_usuario():
-    return GestorGeneral.get_instance().obtener_datos_usuario()
+
+def pulsar_guardar_cambios(ventana_modDatos, entrada_nombre, entrada_apellidos, entrada_correo, entrada_fechaNac,
+                       entrada_usuario, entrada_contrasena):
+    nombre = entrada_nombre.get().strip()
+    apellidos = entrada_apellidos.get().strip()
+    correo = entrada_correo.get().strip()
+    fecha_nacimiento = entrada_fechaNac.get().strip()
+    usuario = entrada_usuario.get().strip()
+    contrasena = entrada_contrasena.get().strip()
+
+    if not all([nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena]):
+        messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
+        return
+
+    if GestorGeneral.get_instance().modificarDatos(nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena):
+        messagebox.showinfo("Éxito", "Datos modificados correctamente.")
+        #recargar
+

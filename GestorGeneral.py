@@ -1,11 +1,9 @@
-from tkinter import messagebox
-
 from GestorUsuarios import GestorUsuarios
 
 
 class GestorGeneral:
     _instance = None  # Variable de clase para almacenar la única instancia
-    nombusuarioactual = None  # Atributo estático
+    nombusuarioactual = 'e' #None  # Atributo estático
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -29,9 +27,6 @@ class GestorGeneral:
         print("Cargando datos de bd...")
         GestorUsuarios.get_instance().cargar_usuarios()
 
-
-
-
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         return GestorUsuarios.get_instance().registrarse(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
 
@@ -42,14 +37,23 @@ class GestorGeneral:
         else:
             return False
 
-    def obtener_usuario(self):
+    def obtener_usuarioAct(self):
         return GestorUsuarios.get_instance().buscarUsuario(GestorGeneral.nombusuarioactual)
 
     def obtener_datos_usuario(self):
-        return self.obtener_usuario().getDatos()
+        return self.obtener_usuarioAct().getDatos()
 
     def obtenerSoliRegistros(self):
         return GestorUsuarios.get_instance().getSoliRegistros()
 
     def aceptarSoliRegistro(self,nombreSoliUsuario):
-        GestorUsuarios.get_instance().aceptSoliRegistro(self.obtener_usuario().getIdUsuario(),nombreSoliUsuario)
+        GestorUsuarios.get_instance().aceptSoliRegistro(self.obtener_usuarioAct().getIdUsuario(), nombreSoliUsuario)
+
+    def obtenerCuentasNoEliminadas(self):
+        return GestorUsuarios.get_instance().getCuentasNoEliminadas()
+
+    def eliminarCuenta(self,nombreCuentaAEliminar):
+        GestorUsuarios.get_instance().elimCuenta(self.obtener_usuarioAct().getIdUsuario(), nombreCuentaAEliminar)
+
+    def modificarDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+        return GestorUsuarios.get_instance().modDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)

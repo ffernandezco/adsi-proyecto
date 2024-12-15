@@ -1,5 +1,6 @@
 import tkinter as tk
 from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, centrar_ventana, fuente_entrada
+from v_elimCuentas import abrir_ventana_elimCuentas
 from v_soliRegistros import abrir_ventana_soliRegistros
 
 
@@ -14,7 +15,8 @@ def abrir_ventana_admin():
 
     tk.Button(ventana_admin, text="Solicitudes de Registro", **estilo_boton, command=lambda: [ventana_admin.destroy(),
                                                                                               abrir_ventana_soliRegistros()]).pack(pady=10)
-    tk.Button(ventana_admin, text="Eliminar Cuentas", **estilo_boton).pack(pady=10)
+    tk.Button(ventana_admin, text="Eliminar Cuentas", **estilo_boton, command=lambda: [ventana_admin.destroy(),
+                                                                                              abrir_ventana_elimCuentas()]).pack(pady=10)
     tk.Button(ventana_admin, text="Modificar Datos", **estilo_boton).pack(pady=10)
 
     tk.Button(ventana_admin, text="Volver", **estilo_boton, command=lambda: [ventana_admin.destroy(), abrir_ventana_principal()]).pack(pady=20)

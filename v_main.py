@@ -18,11 +18,11 @@ def initialize_database(db_name="app_database.sqlite"):
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS usuario (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombreUsuario TEXT UNIQUE NOT NULL,
+            nombreUsuario TEXT NOT NULL,
             contraseña TEXT NOT NULL,
             nombre TEXT NOT NULL,
             apellido TEXT NOT NULL,
-            correo TEXT UNIQUE NOT NULL,
+            correo TEXT NOT NULL,
             fechaNacimiento DATE,
             esAdministrador BOOLEAN DEFAULT 0,
             estaAceptado BOOLEAN DEFAULT 0,
@@ -148,16 +148,16 @@ def cerrar_sesion():
     abrir_ventana_principal()
 
 def pulsar_modificar_datos(ventana_principal):
-    if GestorGeneral.nombusuarioactual is None:
+    '''if GestorGeneral.nombusuarioactual is None:
         messagebox.showinfo("Error", "Inicie sesión para modificar sus datos.")
     else:
         ventana_principal.destroy()
-        abrir_ventana_modDatos()
+        abrir_ventana_modDatos()'''
 
 def pulsar_gestiones_admin(ventana_principal):
     if GestorGeneral.nombusuarioactual is None:
         messagebox.showinfo("Error", "Inicie sesión para acceder (es necesario ser administrador).")
-    elif not GestorGeneral.get_instance().obtener_usuario().esAdmin():
+    elif not GestorGeneral.get_instance().obtener_usuarioAct().esAdmin():
         messagebox.showinfo("Error", "Acceso denegado. No eres administrador.")
     else:
         ventana_principal.destroy()

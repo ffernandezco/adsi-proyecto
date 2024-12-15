@@ -103,7 +103,6 @@ class GestorUsuarios:
                     cursor.execute(query, (usuario, contrasena, nombre, apellidos, correo, fechaNacimiento))
                     conn.commit()
 
-                    #Añadir a la lista de usuarios del gestor
                     query = """
                     SELECT id FROM usuario WHERE nombreUsuario = ? AND estaEliminado = ?;"""
                     cursor.execute(query, (usuario, False))
@@ -111,6 +110,7 @@ class GestorUsuarios:
                     if resultado:
                         id_usuario = resultado[0]
 
+                    #Añadir a la lista de usuarios del gestor
                     # Convertir la fecha de nacimiento al tipo date
                     try:
                         fecha_nacimiento = datetime.strptime(fechaNacimiento, '%Y-%m-%d').date()
@@ -118,7 +118,6 @@ class GestorUsuarios:
                         print("La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
                         return False
                     # Si los datos son válidos, realizar el registro
-                    print("Datos validados correctamente. Registro exitoso.")
                     self.usuarios.append(Usuario(
                         idUsuario=id_usuario,
                         nombreUsuario=usuario,
@@ -129,17 +128,6 @@ class GestorUsuarios:
                         fechaNacimiento=fechaNacimiento))
                     print("Usuario registrado exitosamente.")
                     return True
-
-            except sqlite3.IntegrityError as e:
-                # Detectar errores de unicidad en usuario o correo
-                if "UNIQUE" in str(e):
-                    if "nombreUsuario" in str(e):
-                        messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
-                    elif "correo" in str(e):
-                        messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
-                else:
-                    print(f"Error de integridad: {e}")
-                return False
 
             except sqlite3.Error as e:
                 print(f"Error al registrar el usuario: {e}")
@@ -195,6 +183,17 @@ class GestorUsuarios:
             messagebox.showinfo("Alerta", "La contraseña debe contener al menos un número.")
             return False
 
+        from GestorGeneral import GestorGeneral
+        usuario_encontrado = self.buscarUsuario(usuario)
+        #si hay un usuario con el mismo nombreusuario y que no es él mismo (en caso de estar en modificardatos)
+        if usuario_encontrado is not None and usuario_encontrado.getNombreUsuario()!=GestorGeneral.nombusuarioactual:
+            messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
+            return False
+        usuario_encontrado = next((u for u in self.usuarios if u.getCorreo()==correo and not u.estaElimin()), None)
+        if usuario_encontrado is not None and usuario_encontrado.getCorreo()!=GestorGeneral.get_instance().obtener_usuarioAct().getCorreo():
+            messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
+            return False
+
         # Si todas las validaciones pasan
         return True
 
@@ -230,13 +229,14 @@ class GestorUsuarios:
 
     def getSoliRegistros(self):
         """
-        Devuelve una lista de nombres de usuario en formato JSON cuyos atributos `estaEliminado` son False y `estaAceptado` son False.
+        Devuelve una lista de nombres de usuario en formato JSON cuyos atributos estaEliminado, estaAceptado y esAdministrador son False.
         """
         # Filtrar los usuarios que cumplen con las condiciones
+        from GestorGeneral import GestorGeneral
         nombres_usuarios_pendientes = [
             usuario.getNombreUsuario()
             for usuario in self.usuarios
-            if not usuario.estaElimin() and not usuario.estaAcept() and not usuario.esAdmin()
+            if not usuario.estaElimin() and not usuario.estaAcept() and not usuario.esUsuario(GestorGeneral.nombusuarioactual)
         ]
 
         # Convertir la lista de nombres a formato JSON y devolverla
@@ -256,5 +256,66 @@ class GestorUsuarios:
             print(f"Error al aceptar el usuario: {e}")
 
 
+    def getCuentasNoEliminadas(self):
+        """
+        Devuelve una lista de nombres de usuario en formato JSON cuyo atributo estaEliminado es False y estaAceptado es True.
+        """
+        # Filtrar los usuarios que cumplen con las condiciones
+        from GestorGeneral import GestorGeneral
+        nombres_usuarios_pendientes = [
+            usuario.getNombreUsuario()
+            for usuario in self.usuarios
+            if not usuario.estaElimin() and usuario.estaAcept() and not usuario.esUsuario(GestorGeneral.nombusuarioactual)
+        ]
+
+        # Convertir la lista de nombres a formato JSON y devolverla
+        return json.dumps(nombres_usuarios_pendientes, ensure_ascii=False)
+
+    def elimCuenta(self, idAdminEliminador, nombreCuentaAEliminar):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                # Intentar insertar el usuario en la base de datos
+                query = """UPDATE usuario SET estaEliminado=TRUE, eliminadoPorAdmin = ? WHERE nombreUsuario=?"""
+                cursor.execute(query, (idAdminEliminador, nombreCuentaAEliminar))
+                conn.commit()
+                self.buscarUsuario(nombreCuentaAEliminar).eliminar()
+                print("Usuario aceptado exitosamente.")
+        except sqlite3.Error as e:
+            print(f"Error al eliminar el usuario: {e}")
 
 
+    def modDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+        if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+            try:
+                with sqlite3.connect(self.db_path) as conn:
+                    cursor = conn.cursor()
+
+                    # obtenemos el id del usuario
+                    query = """SELECT id FROM usuario WHERE nombreUsuario = ? AND estaEliminado = ?;"""
+                    cursor.execute(query, (usuario, False))
+                    resultado = cursor.fetchone()
+                    id_usuario = resultado[0]
+
+                    # update el usuario en la base de datos
+                    query = """
+                    UPDATE usuario SET nombreUsuario=?, contraseña=?, nombre=?, apellido=?, correo=?, fechaNacimiento=? WHERE id=?;"""
+                    cursor.execute(query, (usuario, contrasena, nombre, apellidos, correo, fechaNacimiento, id_usuario))
+                    conn.commit()
+
+                    # Convertir la fecha de nacimiento al tipo date
+                    try:
+                        fecha_nacimiento = datetime.strptime(fechaNacimiento, '%Y-%m-%d').date()
+                    except ValueError:
+                        print("La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
+                        return False
+                    # Si los datos son válidos, modificar datos
+                    self.obtener_usuario_por_id(id_usuario).modificar(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
+                    from GestorGeneral import GestorGeneral
+                    GestorGeneral.nombusuarioactual=usuario
+                    print("Datos modificados exitosamente.")
+                    return True
+
+            except sqlite3.Error as e:
+                print(f"Error al modificar el usuario: {e}")
+                return False
