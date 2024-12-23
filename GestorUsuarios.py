@@ -62,8 +62,8 @@ class GestorUsuarios:
                         esAdministrador=bool(row[7]),
                         estaAceptado=bool(row[8]),
                         estaEliminado=bool(row[9]),
-                        aceptadoPorAdmin=self.obtener_usuario_por_id(row[10]),
-                        eliminadoPorAdmin=self.obtener_usuario_por_id(row[11])
+                        aceptadoPorAdmin=row[10],
+                        eliminadoPorAdmin=row[11]
                     )
                     for row in rows
                 ]
@@ -91,7 +91,7 @@ class GestorUsuarios:
             print(usuario.idUsuario, usuario.nombreUsuario, usuario.contrasena, usuario.nombre, usuario.apellido, usuario.correo, usuario.fechaNacimiento)
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+        if self.comprobarDatos(None, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
             try:
                 with sqlite3.connect(self.db_path) as conn:
                     cursor = conn.cursor()
@@ -126,7 +126,7 @@ class GestorUsuarios:
                         apellido=apellidos,
                         correo=correo,
                         fechaNacimiento=fecha_nacimiento))
-                    print("Usuario registrado exitosamente.")
+                    #print("Usuario registrado exitosamente.")
                     return True
 
             except sqlite3.Error as e:
@@ -134,7 +134,7 @@ class GestorUsuarios:
                 return False
 
 
-    def comprobarDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+    def comprobarDatos(self,nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         """
         Valida que los datos proporcionados sean correctos:
         - Nombre y apellidos solo letras.
@@ -160,9 +160,17 @@ class GestorUsuarios:
 
         # Validar fecha de nacimiento en formato YYYY-MM-DD
         try:
-            datetime.strptime(fechaNacimiento, '%Y-%m-%d')  # Intentamos convertir la fecha al formato
+            # Convertir la fecha al objeto datetime
+            fecha = datetime.strptime(fechaNacimiento, '%Y-%m-%d')
+
+            # Validar que la fecha no sea mayor a hoy
+            hoy = datetime.now()
+            if fecha > hoy:
+                messagebox.showinfo("Alerta", "La fecha de nacimiento no puede ser mayor a la fecha actual.")
+                return False
         except ValueError:
-            messagebox.showinfo("Alerta", "La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
+            # Si la fecha no es válida, generar un mensaje de error
+            messagebox.showinfo("Alerta", "La fecha de nacimiento debe estar en el formato YYYY-MM-DD y ser válida.")
             return False
 
         # Validar que el nombre de usuario no esté vacío
@@ -186,12 +194,12 @@ class GestorUsuarios:
         from GestorGeneral import GestorGeneral
         usuario_encontrado = self.buscarUsuario(usuario)
         #si hay un usuario con el mismo nombreusuario y que no es él mismo (en caso de estar en modificardatos)
-        if usuario_encontrado is not None and usuario_encontrado.getNombreUsuario()!=GestorGeneral.nombusuarioactual:
+        if usuario_encontrado is not None and usuario_encontrado.getNombreUsuario()!=nombUsuarioAModificar:
             messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
             return False
         usuario_encontrado = next((u for u in self.usuarios if u.getCorreo()==correo and not u.estaElimin()), None)
         if usuario_encontrado is not None:
-            if usuario_encontrado.getCorreo()!=GestorGeneral.get_instance().obtener_usuarioAct().getCorreo():
+            if usuario_encontrado.getCorreo()!=self.buscarUsuario(nombUsuarioAModificar).getCorreo():
                 messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
                 return False
 
@@ -252,7 +260,7 @@ class GestorUsuarios:
                 cursor.execute(query, (idAdminAceptador, nombreSoliUsuario))
                 conn.commit()
                 self.buscarUsuario(nombreSoliUsuario).aceptar()
-                print("Usuario aceptado exitosamente.")
+                #print("Usuario aceptado exitosamente.")
         except sqlite3.Error as e:
             print(f"Error al aceptar el usuario: {e}")
 
@@ -281,13 +289,13 @@ class GestorUsuarios:
                 cursor.execute(query, (idAdminEliminador, nombreCuentaAEliminar))
                 conn.commit()
                 self.buscarUsuario(nombreCuentaAEliminar).eliminar()
-                print("Usuario aceptado exitosamente.")
+                #print("Usuario eliminado exitosamente.")
         except sqlite3.Error as e:
             print(f"Error al eliminar el usuario: {e}")
 
 
-    def modDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+    def modDatos(self,nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+        if self.comprobarDatos(nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
             try:
                 with sqlite3.connect(self.db_path) as conn:
                     cursor = conn.cursor()
@@ -295,7 +303,7 @@ class GestorUsuarios:
                     # obtenemos el id del usuario
                     query = """SELECT id FROM usuario WHERE nombreUsuario = ? AND estaEliminado = ?;"""
                     from GestorGeneral import GestorGeneral
-                    cursor.execute(query, (GestorGeneral.nombusuarioactual, False))
+                    cursor.execute(query, (nombUsuarioAModificar, False))
                     resultado = cursor.fetchone()
                     id_usuario = resultado[0]
 
@@ -313,8 +321,9 @@ class GestorUsuarios:
                         return False
                     # Si los datos son válidos, modificar datos
                     self.obtener_usuario_por_id(id_usuario).modificar(nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena)
-                    GestorGeneral.nombusuarioactual=usuario
-                    print("Datos modificados exitosamente.")
+                    if nombUsuarioAModificar==GestorGeneral.nombusuarioactual:
+                        GestorGeneral.nombusuarioactual=usuario
+                    #print("Datos modificados exitosamente.")
                     return True
 
             except sqlite3.Error as e:

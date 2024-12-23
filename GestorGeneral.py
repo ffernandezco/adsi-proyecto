@@ -40,8 +40,8 @@ class GestorGeneral:
     def obtener_usuarioAct(self):
         return GestorUsuarios.get_instance().buscarUsuario(GestorGeneral.nombusuarioactual)
 
-    def obtener_datos_usuario(self):
-        return self.obtener_usuarioAct().getDatos()
+    def obtener_datos_usuario(self,nombUsuarioAModificar):
+        return GestorUsuarios.get_instance().buscarUsuario(nombUsuarioAModificar).getDatos()
 
     def obtenerSoliRegistros(self):
         return GestorUsuarios.get_instance().getSoliRegistros()
@@ -55,5 +55,5 @@ class GestorGeneral:
     def eliminarCuenta(self,nombreCuentaAEliminar):
         GestorUsuarios.get_instance().elimCuenta(self.obtener_usuarioAct().getIdUsuario(), nombreCuentaAEliminar)
 
-    def modificarDatos(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        return GestorUsuarios.get_instance().modDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
+    def modificarDatos(self, nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
+        return GestorUsuarios.get_instance().modDatos(nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)

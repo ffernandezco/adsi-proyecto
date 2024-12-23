@@ -146,7 +146,7 @@ def pulsar_modificar_datos(ventana_principal):
         messagebox.showinfo("Error", "Inicie sesión para modificar sus datos.")
     else:
         ventana_principal.destroy()
-        abrir_ventana_modDatos()
+        abrir_ventana_modDatos(None)
 
 def pulsar_gestiones_admin(ventana_principal):
     if GestorGeneral.nombusuarioactual is None:

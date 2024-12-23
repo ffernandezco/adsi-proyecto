@@ -27,8 +27,15 @@ def crear_placeholder(entry, placeholder_text):
     entry.bind("<FocusOut>", on_focus_out)
 
 
-def abrir_ventana_modDatos():
+def abrir_ventana_modDatos(nombUsuarioAModificar): #este parámetro sirve para cuando un admin modifica datos de otro usuario
+
+    adminEditando=True
+    if nombUsuarioAModificar is None:
+        nombUsuarioAModificar=GestorGeneral.nombusuarioactual
+        adminEditando = False
+
     from v_main import abrir_ventana_principal
+    from v_modDatosAdmin import abrir_ventana_modDatosAdmin
 
     ventana_modDatos = tk.Tk()
     ventana_modDatos.title("Modificar Datos de Usuario")
@@ -38,7 +45,7 @@ def abrir_ventana_modDatos():
     tk.Label(ventana_modDatos, text="Modificar Usuario", font=fuente_titulo).pack(pady=10)
 
     # Simula obtener datos del usuario (esto debería ser un JSON válido)
-    usuario_json = GestorGeneral.get_instance().obtener_datos_usuario()
+    usuario_json = GestorGeneral.get_instance().obtener_datos_usuario(nombUsuarioAModificar)
     jsonDatosUsuario = json.loads(usuario_json)
     #print(jsonDatosUsuario)
 
@@ -83,14 +90,16 @@ def abrir_ventana_modDatos():
         entrada_contrasena.insert(0, jsonDatosUsuario["contrasena"])  # Inserta el valor del JSON
     entrada_contrasena.pack(pady=1)
 
-    tk.Button(ventana_modDatos, text="Guardar Cambios", **estilo_boton, command=lambda: pulsar_guardar_cambios(ventana_modDatos, entrada_nombre,
+    tk.Button(ventana_modDatos, text="Guardar Cambios", **estilo_boton, command=lambda: pulsar_guardar_cambios(ventana_modDatos, nombUsuarioAModificar, entrada_nombre,
                                                        entrada_apellidos, entrada_correo, entrada_fechaNac, entrada_usuario, entrada_contrasena)).pack(pady=10)
-    tk.Button(ventana_modDatos, text="Volver", **estilo_boton, command=lambda: [ventana_modDatos.destroy(), abrir_ventana_principal()]).pack(pady=10)
-
+    if adminEditando:
+        tk.Button(ventana_modDatos, text="Volver", **estilo_boton, command=lambda: [ventana_modDatos.destroy(), abrir_ventana_modDatosAdmin()]).pack(pady=10)
+    else:
+        tk.Button(ventana_modDatos, text="Volver", **estilo_boton, command=lambda: [ventana_modDatos.destroy(), abrir_ventana_principal()]).pack(pady=10)
     ventana_modDatos.mainloop()
 
 
-def pulsar_guardar_cambios(ventana_modDatos, entrada_nombre, entrada_apellidos, entrada_correo, entrada_fechaNac,
+def pulsar_guardar_cambios(ventana_modDatos,nombUsuarioAModificar, entrada_nombre, entrada_apellidos, entrada_correo, entrada_fechaNac,
                        entrada_usuario, entrada_contrasena):
     nombre = entrada_nombre.get().strip()
     apellidos = entrada_apellidos.get().strip()
@@ -99,12 +108,9 @@ def pulsar_guardar_cambios(ventana_modDatos, entrada_nombre, entrada_apellidos, 
     usuario = entrada_usuario.get().strip()
     contrasena = entrada_contrasena.get().strip()
 
-    from GestorUsuarios import GestorUsuarios
-    GestorUsuarios.get_instance().listar_usuarios()
-
     if not all([nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena]):
         messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
         return
 
-    if GestorGeneral.get_instance().modificarDatos(nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena):
+    if GestorGeneral.get_instance().modificarDatos(nombUsuarioAModificar,nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena):
         messagebox.showinfo("Éxito", "Datos modificados correctamente.")

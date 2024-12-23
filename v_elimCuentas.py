@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 import json
 from GestorGeneral import GestorGeneral
-from estilo import centrar_ventana, estilo_boton
+from estilo import centrar_ventana, estilo_boton, fuente_titulo
+
 
 def abrir_ventana_elimCuentas():
     """
@@ -19,7 +20,7 @@ def abrir_ventana_elimCuentas():
         Refresca el contenido de la ventana para mostrar las cuentas a eliminar.
         """
         # Limpiar el marco existente
-        for widget in marco.winfo_children():
+        for widget in marco_interior.winfo_children():
             widget.destroy()
 
         # Obtener cuentas en formato JSON
@@ -33,12 +34,12 @@ def abrir_ventana_elimCuentas():
 
         # Verificar si hay cuentas
         if not cuentas:
-            tk.Label(marco, text="No hay cuentas a eliminar.", font=("Arial", 12)).pack(pady=20)
+            tk.Label(marco_interior, text="No hay cuentas a eliminar.", font=("Arial", 12)).pack(pady=20)
         else:
             # Crear un contenedor para cada solicitud
             for nombre_usuario in cuentas:
                 # Crear un marco para cada cuenta
-                cuenta_frame = tk.Frame(marco, relief="solid", padx=10, pady=5)
+                cuenta_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5)
                 cuenta_frame.pack(fill="x", pady=5)
 
                 # Mostrar nombre de usuario
@@ -47,6 +48,10 @@ def abrir_ventana_elimCuentas():
                 # Botón para eliminar cuenta
                 tk.Button(cuenta_frame, text="Eliminar Cuenta", **estilo_boton,
                           command=lambda usuario=nombre_usuario: eliminar_cuenta(usuario)).pack(side="right", padx=10)
+
+        # Ajustar el scroll para que se corresponda con el contenido
+        canvas.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox("all"))
 
     def eliminar_cuenta(nombre_usuario):
         """
@@ -62,11 +67,21 @@ def abrir_ventana_elimCuentas():
             messagebox.showerror("Error", f"No se pudo eliminar la cuenta de {nombre_usuario}.\nError: {e}")
 
     # Título
-    tk.Label(ventana_elimCuentas, text="Eliminar Cuentas", font=("Arial", 16, "bold")).pack(pady=10)
+    tk.Label(ventana_elimCuentas, text="Eliminar Cuentas", font=fuente_titulo).pack(pady=10)
 
-    # Marco para los elementos
-    marco = tk.Frame(ventana_elimCuentas)
-    marco.pack(fill="both", expand=True, padx=10, pady=10)
+    # Crear un canvas con scrollbar
+    frame_canvas = tk.Frame(ventana_elimCuentas)
+    frame_canvas.pack(fill="both", expand=True)
+
+    canvas = tk.Canvas(frame_canvas)
+    scrollbar = tk.Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
+    scrollbar.pack(side="right", fill="y")
+    canvas.pack(side="left", fill="both", expand=True)
+    canvas.config(yscrollcommand=scrollbar.set)
+
+    # Crear un marco interior dentro del canvas
+    marco_interior = tk.Frame(canvas)
+    canvas.create_window((0, 0), window=marco_interior, anchor="nw")
 
     # Inicializar las cuentas al abrir la ventana
     refrescar_cuentas()
