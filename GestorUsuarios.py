@@ -88,7 +88,7 @@ class GestorUsuarios:
         Imprime una lista de todos los usuarios cargados.
         """
         for usuario in self.usuarios:
-            print(usuario.nombreUsuario, usuario.idUsuario)
+            print(usuario.idUsuario, usuario.nombreUsuario, usuario.contrasena, usuario.nombre, usuario.apellido, usuario.correo, usuario.fechaNacimiento)
 
     def registrarse(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         if self.comprobarDatos(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
@@ -125,7 +125,7 @@ class GestorUsuarios:
                         nombre=nombre,
                         apellido=apellidos,
                         correo=correo,
-                        fechaNacimiento=fechaNacimiento))
+                        fechaNacimiento=fecha_nacimiento))
                     print("Usuario registrado exitosamente.")
                     return True
 
@@ -145,8 +145,8 @@ class GestorUsuarios:
         """
 
         # Validar nombre y apellidos (solo letras)
-        if not re.match("^[A-Za-záéíóúÁÉÍÓÚñÑ]+$", nombre):
-            messagebox.showinfo("Alerta", "El nombre solo debe contener letras.")
+        if not re.match(r"^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$", nombre):
+            messagebox.showinfo("Alerta", "El nombre solo debe contener letras y espacios.")
             return False
 
         if not re.match(r"^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$", apellidos):
@@ -190,9 +190,10 @@ class GestorUsuarios:
             messagebox.showinfo("Alerta", "El nombre de usuario ya está registrado.")
             return False
         usuario_encontrado = next((u for u in self.usuarios if u.getCorreo()==correo and not u.estaElimin()), None)
-        if usuario_encontrado is not None and usuario_encontrado.getCorreo()!=GestorGeneral.get_instance().obtener_usuarioAct().getCorreo():
-            messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
-            return False
+        if usuario_encontrado is not None:
+            if usuario_encontrado.getCorreo()!=GestorGeneral.get_instance().obtener_usuarioAct().getCorreo():
+                messagebox.showinfo("Alerta", "El correo electrónico ya está registrado.")
+                return False
 
         # Si todas las validaciones pasan
         return True
@@ -293,7 +294,8 @@ class GestorUsuarios:
 
                     # obtenemos el id del usuario
                     query = """SELECT id FROM usuario WHERE nombreUsuario = ? AND estaEliminado = ?;"""
-                    cursor.execute(query, (usuario, False))
+                    from GestorGeneral import GestorGeneral
+                    cursor.execute(query, (GestorGeneral.nombusuarioactual, False))
                     resultado = cursor.fetchone()
                     id_usuario = resultado[0]
 
@@ -310,8 +312,7 @@ class GestorUsuarios:
                         print("La fecha de nacimiento debe estar en el formato YYYY-MM-DD.")
                         return False
                     # Si los datos son válidos, modificar datos
-                    self.obtener_usuario_por_id(id_usuario).modificar(nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
-                    from GestorGeneral import GestorGeneral
+                    self.obtener_usuario_por_id(id_usuario).modificar(nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena)
                     GestorGeneral.nombusuarioactual=usuario
                     print("Datos modificados exitosamente.")
                     return True

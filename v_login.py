@@ -56,7 +56,6 @@ def pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena):
         messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
         return  # No continuar con el inicio de sesión
 
-
     # Intentar iniciar sesión
     if GestorGeneral.get_instance().iniciarsesion(usuario, contrasena):
         messagebox.showinfo("Inicio de Sesión", "Inicio de sesión exitoso")

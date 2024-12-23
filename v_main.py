@@ -99,8 +99,6 @@ def initialize_database(db_name="app_database.sqlite"):
 def abrir_ventana_principal():
     #importación local para evitar el ciclo
     from v_login import abrir_ventana_login
-    from v_modDatos import abrir_ventana_modDatos
-    from v_admin import abrir_ventana_admin
     from v_historial import abrir_ventana_historial
 
     #crear la ventana principal
@@ -114,10 +112,6 @@ def abrir_ventana_principal():
 
     # Obtener el nombre del usuario actual
     nombreUsuario_actual = GestorGeneral.nombusuarioactual
-    #print("NombreUsuario_actual: ", nombreUsuario_actual)
-    #from GestorUsuarios import GestorUsuarios
-    #print("Usuarios de GestorUsuarios")
-    #GestorUsuarios.get_instance().listar_usuarios()
 
     #agregar botones a la barra de menú
     if nombreUsuario_actual is None:
@@ -148,11 +142,11 @@ def cerrar_sesion():
     abrir_ventana_principal()
 
 def pulsar_modificar_datos(ventana_principal):
-    '''if GestorGeneral.nombusuarioactual is None:
+    if GestorGeneral.nombusuarioactual is None:
         messagebox.showinfo("Error", "Inicie sesión para modificar sus datos.")
     else:
         ventana_principal.destroy()
-        abrir_ventana_modDatos()'''
+        abrir_ventana_modDatos()
 
 def pulsar_gestiones_admin(ventana_principal):
     if GestorGeneral.nombusuarioactual is None:

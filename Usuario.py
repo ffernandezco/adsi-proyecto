@@ -50,7 +50,7 @@ class Usuario:
             'nombre': self.nombre,
             'apellido': self.apellido,
             'correo': self.correo,
-            'fechaNacimiento': self.fechaNacimiento,  # Convertir la fecha a formato string
+            'fechaNacimiento': self.fechaNacimiento.isoformat(),  # Convertir la fecha a formato string
             'nombreUsuario': self.nombreUsuario,
             'contrasena': self.contrasena
         }
@@ -68,9 +68,9 @@ class Usuario:
         self.eliminadoPorAdminm = GestorGeneral.get_instance().obtener_usuarioAct().getIdUsuario()
 
     def modificar(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
-        self.nombreUsuario = nombre
+        self.nombre = nombre
         self.apellido = apellidos
         self.correo = correo
         self.fechaNacimiento = fechaNacimiento
-        self.usuario = usuario
+        self.nombreUsuario = usuario
         self.contrasena = contrasena

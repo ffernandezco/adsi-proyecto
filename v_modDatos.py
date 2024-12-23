@@ -99,11 +99,12 @@ def pulsar_guardar_cambios(ventana_modDatos, entrada_nombre, entrada_apellidos, 
     usuario = entrada_usuario.get().strip()
     contrasena = entrada_contrasena.get().strip()
 
+    from GestorUsuarios import GestorUsuarios
+    GestorUsuarios.get_instance().listar_usuarios()
+
     if not all([nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena]):
         messagebox.showinfo("Alerta", "Todos los campos son obligatorios")
         return
 
     if GestorGeneral.get_instance().modificarDatos(nombre, apellidos, correo, fecha_nacimiento, usuario, contrasena):
         messagebox.showinfo("Éxito", "Datos modificados correctamente.")
-        #recargar
-
