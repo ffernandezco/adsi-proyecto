@@ -57,15 +57,15 @@ class Usuario:
         # Devolver el diccionario como JSON
         return json.dumps(data)
 
-    def aceptar(self):
+    def aceptar(self,idAdminAceptador):
         self.estaAceptado = True
         from GestorGeneral import GestorGeneral
-        self.aceptadoPorAdmin = GestorGeneral.get_instance().obtener_usuarioAct().getIdUsuario()
+        self.aceptadoPorAdmin = idAdminAceptador
 
-    def eliminar(self):
+    def eliminar(self,idAdminEliminador):
         self.estaEliminado = True
         from GestorGeneral import GestorGeneral
-        self.eliminadoPorAdminm = GestorGeneral.get_instance().obtener_usuarioAct().getIdUsuario()
+        self.eliminadoPorAdminm = idAdminEliminador
 
     def modificar(self, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         self.nombre = nombre

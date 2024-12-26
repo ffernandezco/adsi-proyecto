@@ -259,7 +259,7 @@ class GestorUsuarios:
                 query = """UPDATE usuario SET estaAceptado=TRUE, aceptadoPorAdmin = ? WHERE nombreUsuario=?"""
                 cursor.execute(query, (idAdminAceptador, nombreSoliUsuario))
                 conn.commit()
-                self.buscarUsuario(nombreSoliUsuario).aceptar()
+                self.buscarUsuario(nombreSoliUsuario).aceptar(idAdminAceptador)
                 #print("Usuario aceptado exitosamente.")
         except sqlite3.Error as e:
             print(f"Error al aceptar el usuario: {e}")
@@ -288,7 +288,7 @@ class GestorUsuarios:
                 query = """UPDATE usuario SET estaEliminado=TRUE, eliminadoPorAdmin = ? WHERE nombreUsuario=?"""
                 cursor.execute(query, (idAdminEliminador, nombreCuentaAEliminar))
                 conn.commit()
-                self.buscarUsuario(nombreCuentaAEliminar).eliminar()
+                self.buscarUsuario(nombreCuentaAEliminar).eliminar(idAdminEliminador)
                 #print("Usuario eliminado exitosamente.")
         except sqlite3.Error as e:
             print(f"Error al eliminar el usuario: {e}")
