@@ -7,6 +7,8 @@ from estilo import estilo_boton, centrar_ventana
 from v_admin import abrir_ventana_admin
 from v_modDatos import abrir_ventana_modDatos
 
+from v_pelicula import abrir_ventana_catalogo
+
 
 # Inicialización básica de la base de datos
 def initialize_database(db_name="app_database.sqlite"):
@@ -143,7 +145,7 @@ def abrir_ventana_principal():
     catalogo_frame.pack(pady=20)
 
     # Agregar botones de ver catálogo
-    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton).pack(side="left", padx=10)
+    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command=abrir_ventana_catalogo).pack(side="left", padx=10)
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
 
     if nombreUsuario_actual is not None:
