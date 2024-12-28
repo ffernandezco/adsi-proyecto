@@ -10,15 +10,17 @@ def abrir_ventana_admin():
 
     ventana_admin = tk.Tk()
     ventana_admin.title("Gestiones de Administrador")
+    ventana_admin.configure(bg="#ffffff")  # Fondo blanco
     centrar_ventana(ventana_admin)
 
-    tk.Label(ventana_admin, text="Gestiones de Administrador", font=fuente_titulo).pack(pady=10)
+    tk.Label(ventana_admin, text="Gestiones de Administrador", font=fuente_titulo, bg="#ffffff", fg="#000000").pack(pady=10)
 
     tk.Button(ventana_admin, text="Solicitudes de Registro", **estilo_boton, command=lambda: [ventana_admin.destroy(),
                                                                                               abrir_ventana_soliRegistros()]).pack(pady=10)
     tk.Button(ventana_admin, text="Eliminar Cuentas", **estilo_boton, command=lambda: [ventana_admin.destroy(),
-                                                                                              abrir_ventana_elimCuentas()]).pack(pady=10)
-    tk.Button(ventana_admin, text="Modificar Datos de Usuarios", **estilo_boton, command=lambda: [ventana_admin.destroy(),abrir_ventana_modDatosAdmin()]).pack(pady=10)
+                                                                                       abrir_ventana_elimCuentas()]).pack(pady=10)
+    tk.Button(ventana_admin, text="Modificar Datos de Usuarios", **estilo_boton, command=lambda: [ventana_admin.destroy(),
+                                                                                                  abrir_ventana_modDatosAdmin()]).pack(pady=10)
 
     tk.Button(ventana_admin, text="Volver", **estilo_boton, command=lambda: [ventana_admin.destroy(), abrir_ventana_principal()]).pack(pady=20)
 

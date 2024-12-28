@@ -12,6 +12,7 @@ def abrir_ventana_elimCuentas():
     # Crear ventana
     ventana_elimCuentas = tk.Tk()
     ventana_elimCuentas.title("Eliminar Cuentas")
+    ventana_elimCuentas.configure(bg="#ffffff")  # Fondo blanco
     centrar_ventana(ventana_elimCuentas)
     ventana_elimCuentas.geometry("600x400")
 
@@ -34,16 +35,16 @@ def abrir_ventana_elimCuentas():
 
         # Verificar si hay cuentas
         if not cuentas:
-            tk.Label(marco_interior, text="No hay cuentas a eliminar.", font=("Arial", 12)).pack(pady=20)
+            tk.Label(marco_interior, text="No hay cuentas a eliminar.", font=("Arial", 12), bg="#ffffff", fg="#000000").pack(pady=20)
         else:
             # Crear un contenedor para cada solicitud
             for nombre_usuario in cuentas:
                 # Crear un marco para cada cuenta
-                cuenta_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5)
+                cuenta_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5, bg="#ffffff")
                 cuenta_frame.pack(fill="x", pady=5)
 
                 # Mostrar nombre de usuario
-                tk.Label(cuenta_frame, text=f"Usuario: {nombre_usuario}", font=("Arial", 12)).pack(side="left")
+                tk.Label(cuenta_frame, text=f"Usuario: {nombre_usuario}", font=("Arial", 12), bg="#ffffff", fg="#000000").pack(side="left")
 
                 # Botón para eliminar cuenta
                 tk.Button(cuenta_frame, text="Eliminar Cuenta", **estilo_boton,
@@ -67,20 +68,20 @@ def abrir_ventana_elimCuentas():
             messagebox.showerror("Error", f"No se pudo eliminar la cuenta de {nombre_usuario}.\nError: {e}")
 
     # Título
-    tk.Label(ventana_elimCuentas, text="Eliminar Cuentas", font=fuente_titulo).pack(pady=10)
+    tk.Label(ventana_elimCuentas, text="Eliminar Cuentas", font=fuente_titulo, bg="#ffffff", fg="#000000").pack(pady=10)
 
     # Crear un canvas con scrollbar
-    frame_canvas = tk.Frame(ventana_elimCuentas)
+    frame_canvas = tk.Frame(ventana_elimCuentas, bg="#ffffff")
     frame_canvas.pack(fill="both", expand=True)
 
-    canvas = tk.Canvas(frame_canvas)
+    canvas = tk.Canvas(frame_canvas, bg="#ffffff")
     scrollbar = tk.Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
     scrollbar.pack(side="right", fill="y")
     canvas.pack(side="left", fill="both", expand=True)
     canvas.config(yscrollcommand=scrollbar.set)
 
     # Crear un marco interior dentro del canvas
-    marco_interior = tk.Frame(canvas)
+    marco_interior = tk.Frame(canvas, bg="#ffffff")
     canvas.create_window((0, 0), window=marco_interior, anchor="nw")
 
     # Inicializar las cuentas al abrir la ventana
