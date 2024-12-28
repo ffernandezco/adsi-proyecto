@@ -37,31 +37,31 @@ def abrir_ventana_register():
 
     # Campos con placeholders
     tk.Label(ventana_register, text="Nombre:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_nombre = tk.Entry(ventana_register, font=fuente_entrada, width=30)
+    entrada_nombre = tk.Entry(ventana_register, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_nombre.pack(pady=1)
     crear_placeholder(entrada_nombre, "Nombre")
 
     tk.Label(ventana_register, text="Apellidos:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_apellidos = tk.Entry(ventana_register, font=fuente_entrada, width=30)
+    entrada_apellidos = tk.Entry(ventana_register, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_apellidos.pack(pady=1)
     crear_placeholder(entrada_apellidos, "Apellido")
 
     tk.Label(ventana_register, text="Correo:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_correo = tk.Entry(ventana_register, font=fuente_entrada, width=30)
+    entrada_correo = tk.Entry(ventana_register, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_correo.pack(pady=1)
     crear_placeholder(entrada_correo, "x@x.x")
 
     tk.Label(ventana_register, text="Fecha de nacimiento:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_fechaNac = tk.Entry(ventana_register, font=fuente_entrada, width=30)
+    entrada_fechaNac = tk.Entry(ventana_register, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_fechaNac.pack(pady=1)
     crear_placeholder(entrada_fechaNac, "AAAA-MM-DD")
 
     tk.Label(ventana_register, text="Usuario:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_usuario = tk.Entry(ventana_register, font=fuente_entrada, width=30)
+    entrada_usuario = tk.Entry(ventana_register, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_usuario.pack(pady=1)
 
     tk.Label(ventana_register, text="Contraseña (mínimo 8 caracteres, al menos 1 letra y 1 número):", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_contrasena = tk.Entry(ventana_register, show="*", font=fuente_entrada, width=30)
+    entrada_contrasena = tk.Entry(ventana_register, show="*", font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_contrasena.pack(pady=1)
 
     tk.Button(ventana_register, text="Registrar", **estilo_boton,

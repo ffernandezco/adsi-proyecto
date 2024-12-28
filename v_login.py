@@ -25,12 +25,12 @@ def abrir_ventana_login():
 
     # Formulario de usuario
     tk.Label(frame_formulario, text="Usuario:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").grid(row=0, column=0, pady=5, sticky="w")
-    entrada_usuario = tk.Entry(frame_formulario, font=fuente_entrada, width=30)
+    entrada_usuario = tk.Entry(frame_formulario, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_usuario.grid(row=0, column=1, pady=5, padx=10)
 
     # Formulario de contraseña
     tk.Label(frame_formulario, text="Contraseña:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").grid(row=1, column=0, pady=5, sticky="w")
-    entrada_contrasena = tk.Entry(frame_formulario, show="*", font=fuente_entrada, width=30)
+    entrada_contrasena = tk.Entry(frame_formulario, show="*", font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     entrada_contrasena.grid(row=1, column=1, pady=5, padx=10)
 
     # Botón de iniciar sesión

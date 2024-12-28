@@ -51,41 +51,41 @@ def abrir_ventana_modDatos(nombUsuarioAModificar):  # este parámetro sirve para
 
     # Campos con placeholders
     tk.Label(ventana_modDatos, text="Nombre:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_nombre = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30)
+    entrada_nombre = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     if jsonDatosUsuario["nombre"]:
         entrada_nombre.insert(0, jsonDatosUsuario["nombre"])  # Inserta el valor del JSON
     entrada_nombre.pack(pady=1)
     crear_placeholder(entrada_nombre, "Nombre")
 
     tk.Label(ventana_modDatos, text="Apellidos:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_apellidos = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30)
+    entrada_apellidos = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     if jsonDatosUsuario["apellido"]:
         entrada_apellidos.insert(0, jsonDatosUsuario["apellido"])  # Inserta el valor del JSON
     entrada_apellidos.pack(pady=1)
     crear_placeholder(entrada_apellidos, "Apellido")
 
     tk.Label(ventana_modDatos, text="Correo:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_correo = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30)
+    entrada_correo = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     if jsonDatosUsuario["correo"]:
         entrada_correo.insert(0, jsonDatosUsuario["correo"])  # Inserta el valor del JSON
     entrada_correo.pack(pady=1)
     crear_placeholder(entrada_correo, "x@x.x")
 
     tk.Label(ventana_modDatos, text="Fecha de nacimiento:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_fechaNac = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30)
+    entrada_fechaNac = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     if jsonDatosUsuario["fechaNacimiento"]:
         entrada_fechaNac.insert(0, jsonDatosUsuario["fechaNacimiento"])  # Inserta el valor del JSON
     entrada_fechaNac.pack(pady=1)
     crear_placeholder(entrada_fechaNac, "AAAA-MM-DD")
 
     tk.Label(ventana_modDatos, text="Usuario:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_usuario = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30)
+    entrada_usuario = tk.Entry(ventana_modDatos, font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     if jsonDatosUsuario["nombreUsuario"]:
         entrada_usuario.insert(0, jsonDatosUsuario["nombreUsuario"])  # Inserta el valor del JSON
     entrada_usuario.pack(pady=1)
 
     tk.Label(ventana_modDatos, text="Contraseña (mínimo 8 caracteres, al menos 1 letra y 1 número):", font=fuente_etiqueta, bg="#ffffff", fg="#000000").pack(pady=5)
-    entrada_contrasena = tk.Entry(ventana_modDatos, show="*", font=fuente_entrada, width=30)
+    entrada_contrasena = tk.Entry(ventana_modDatos, show="*", font=fuente_entrada, width=30, bg="#ffffff", fg="#000000")
     if jsonDatosUsuario["contrasena"]:
         entrada_contrasena.insert(0, jsonDatosUsuario["contrasena"])  # Inserta el valor del JSON
     entrada_contrasena.pack(pady=1)
