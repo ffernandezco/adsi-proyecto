@@ -13,24 +13,25 @@ def abrir_ventana_modDatosAdmin():
     # Crear ventana
     ventana_modDatosAdmin = tk.Tk()
     ventana_modDatosAdmin.title("Modificar Datos de Usuarios")
+    ventana_modDatosAdmin.configure(bg="#ffffff")  # Fondo blanco
     centrar_ventana(ventana_modDatosAdmin)
     ventana_modDatosAdmin.geometry("600x400")
 
     # Título
-    tk.Label(ventana_modDatosAdmin, text="Modificar Datos de Usuarios", font=fuente_titulo).pack(pady=10)
+    tk.Label(ventana_modDatosAdmin, text="Modificar Datos de Usuarios", font=fuente_titulo, bg="#ffffff", fg="#000000").pack(pady=10)
 
     # Crear un canvas con scrollbar
-    frame_canvas = tk.Frame(ventana_modDatosAdmin)
+    frame_canvas = tk.Frame(ventana_modDatosAdmin, bg="#ffffff")
     frame_canvas.pack(fill="both", expand=True)
 
-    canvas = tk.Canvas(frame_canvas)
+    canvas = tk.Canvas(frame_canvas, bg="#ffffff")
     scrollbar = tk.Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
     scrollbar.pack(side="right", fill="y")
     canvas.pack(side="left", fill="both", expand=True)
     canvas.config(yscrollcommand=scrollbar.set)
 
     # Crear un marco interior dentro del canvas
-    marco_interior = tk.Frame(canvas)
+    marco_interior = tk.Frame(canvas, bg="#ffffff")
     canvas.create_window((0, 0), window=marco_interior, anchor="nw")
 
     """
@@ -51,16 +52,16 @@ def abrir_ventana_modDatosAdmin():
 
     # Verificar si hay usuarios
     if not usuarios:
-        tk.Label(marco_interior, text="No hay usuarios disponibles para modificar.", font=("Arial", 12)).pack(pady=20)
+        tk.Label(marco_interior, text="No hay usuarios disponibles para modificar.", font=("Arial", 12), bg="#ffffff", fg="#000000").pack(pady=20)
     else:
         # Crear un contenedor para cada usuario
         for nombre_usuario in usuarios:
             # Crear un marco para cada usuario
-            usuario_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5)
+            usuario_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5, bg="#ffffff")
             usuario_frame.pack(fill="x", pady=5)
 
             # Mostrar nombre de usuario
-            tk.Label(usuario_frame, text=f"Usuario: {nombre_usuario}", font=("Arial", 12)).pack(side="left")
+            tk.Label(usuario_frame, text=f"Usuario: {nombre_usuario}", font=("Arial", 12), bg="#ffffff", fg="#000000").pack(side="left")
 
             # Botón para modificar datos
             tk.Button(usuario_frame, text="Modificar Datos", **estilo_boton,

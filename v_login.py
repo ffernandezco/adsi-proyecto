@@ -7,39 +7,52 @@ from v_main import abrir_ventana_principal
 
 
 def abrir_ventana_login():
-    #importación local para evitar el ciclo
+    # Importación local para evitar el ciclo
     from v_register import abrir_ventana_register
 
-    #crear la ventana de inicio de sesión
+    # Crear la ventana de inicio de sesión
     ventana_login = tk.Tk()
     ventana_login.title("Inicio de Sesión")
+    ventana_login.configure(bg="#ffffff")  # Fondo más moderno
     centrar_ventana(ventana_login)
 
-    #agregar título
-    tk.Label(ventana_login, text="Inicio de Sesión", font=fuente_titulo).pack(pady=(40,10)) #margen superior de 20 y margen inferior de 10
+    # Agregar título
+    tk.Label(ventana_login, text="Inicio de Sesión", font=fuente_titulo, bg="#ffffff", fg="#000000").pack(pady=(40, 20))
 
-    #formulario
-    tk.Label(ventana_login, text="Usuario:", font=fuente_etiqueta).pack(pady=5)
-    entrada_usuario = tk.Entry(ventana_login, font=fuente_entrada, width=30)
-    entrada_usuario.pack(pady=1)
+    # Crear un marco para el formulario
+    frame_formulario = tk.Frame(ventana_login, bg="#ffffff")
+    frame_formulario.pack(pady=10)
 
-    tk.Label(ventana_login, text="Contraseña:", font=fuente_etiqueta).pack(pady=5)
-    entrada_contrasena = tk.Entry(ventana_login, show="*", font=fuente_entrada, width=30)
-    entrada_contrasena.pack(pady=1)
+    # Formulario de usuario
+    tk.Label(frame_formulario, text="Usuario:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").grid(row=0, column=0, pady=5, sticky="w")
+    entrada_usuario = tk.Entry(frame_formulario, font=fuente_entrada, width=30)
+    entrada_usuario.grid(row=0, column=1, pady=5, padx=10)
 
-    #botones
-    tk.Button(ventana_login, text="Iniciar Sesión", **estilo_boton, command=lambda: pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena)).pack(pady=10)
+    # Formulario de contraseña
+    tk.Label(frame_formulario, text="Contraseña:", font=fuente_etiqueta, bg="#ffffff", fg="#000000").grid(row=1, column=0, pady=5, sticky="w")
+    entrada_contrasena = tk.Entry(frame_formulario, show="*", font=fuente_entrada, width=30)
+    entrada_contrasena.grid(row=1, column=1, pady=5, padx=10)
 
+    # Botón de iniciar sesión
+    tk.Button(ventana_login, text="Iniciar Sesión", **estilo_boton, command=lambda: pulsar_iniciarsesion(ventana_login, entrada_usuario, entrada_contrasena)).pack(pady=(20, 10))
+
+    # Botón de volver
     tk.Button(ventana_login, text="Volver", **estilo_boton, command=lambda: [ventana_login.destroy(), abrir_ventana_principal()]).pack(pady=5)
 
-    #"¿No tienes cuenta?" y un link para "Regístrate"
-    tk.Label(ventana_login, text="¿No tienes cuenta? ", font=fuente_etiqueta).pack(side="left", padx=(5, 0))
+    # Separador
+    tk.Label(ventana_login, text="──────────────────────", font=("Arial", 10), bg="#ffffff", fg="#000000").pack(pady=(20, 10))
 
-    link_registro = tk.Label(ventana_login, text="Regístrate", font=("Arial", 10, "underline"), fg="blue", cursor="hand2")
-    link_registro.pack(side="left", padx=(0, 5))
+    # Crear marco para el registro
+    frame_registro = tk.Frame(ventana_login, bg="#ffffff")
+    frame_registro.pack()
+
+    tk.Label(frame_registro, text="¿No tienes cuenta? ", font=fuente_etiqueta, bg="#ffffff", fg="#666666").grid(row=0, column=0, sticky="e")
+
+    link_registro = tk.Label(frame_registro, text="Regístrate", font=("Arial", 10, "underline"), fg="#007bff", bg="#ffffff", cursor="hand2")
+    link_registro.grid(row=0, column=1, sticky="w")
     link_registro.bind("<Button-1>", lambda event: [ventana_login.destroy(), abrir_ventana_register()])
 
-    #ejecutar el bucle de eventos de la ventana de inicio de sesión
+    # Ejecutar el bucle de eventos de la ventana de inicio de sesión
     ventana_login.mainloop()
 
 

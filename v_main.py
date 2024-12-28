@@ -97,44 +97,54 @@ def initialize_database(db_name="app_database.sqlite"):
             conn.close()
 
 def abrir_ventana_principal():
-    #importación local para evitar el ciclo
     from v_login import abrir_ventana_login
     from v_historial import abrir_ventana_historial
 
-    #crear la ventana principal
+    # Crear la ventana principal
     ventana_principal = tk.Tk()
     ventana_principal.title("Página Principal")
     centrar_ventana(ventana_principal)
 
-    #crear la barra de menú (simplemente un marco para los botones)
-    barra_menu = tk.Frame(ventana_principal, bg="#cdcdcd", height=40)
+    # Cambiar el fondo de la ventana principal
+    ventana_principal.configure(bg="white")
+
+    # Crear la barra de menú (un marco para los botones)
+    barra_menu = tk.Frame(ventana_principal, bg="white", height=40)
     barra_menu.pack(fill="x")
 
     # Obtener el nombre del usuario actual
     nombreUsuario_actual = GestorGeneral.nombusuarioactual
 
-    #agregar botones a la barra de menú
+    # Agregar botones a la barra de menú
+    boton_color = {"bg": "white", "fg": "black", "bd": 0}  # Botones adaptados al fondo blanco
     if nombreUsuario_actual is None:
-        tk.Button(barra_menu, text="Iniciar sesión", bg="#cdcdcd", bd=0, command=lambda: [ventana_principal.destroy(), abrir_ventana_login()]).pack(side="left", padx=10, ipadx=5, ipady=5)
+        tk.Button(barra_menu, text="Iniciar sesión", **boton_color,
+                  command=lambda: [ventana_principal.destroy(), abrir_ventana_login()]).pack(side="left", padx=10, ipadx=5, ipady=5)
     else:
-        tk.Button(barra_menu, text="Cerrar sesión", bg="#cdcdcd", bd=0,command=lambda: [ventana_principal.destroy(),cerrar_sesion()]).pack(side="left", padx=10,ipadx=5, ipady=5)
-    tk.Button(barra_menu, text="Modificar datos", bg="#cdcdcd", bd=0, command=lambda: pulsar_modificar_datos(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
-    tk.Button(barra_menu, text="Consultar historial", bg="#cdcdcd", bd=0, command=lambda: [ventana_principal.destroy(), abrir_ventana_historial()]).pack(side="left", padx=10, ipadx=5, ipady=5)
-    tk.Button(barra_menu, text="Gestiones de Administrador", bg="#cdcdcd", bd=0, command=lambda: pulsar_gestiones_admin(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
+        tk.Button(barra_menu, text="Cerrar sesión", **boton_color,
+                  command=lambda: [ventana_principal.destroy(), cerrar_sesion()]).pack(side="left", padx=10, ipadx=5, ipady=5)
 
-    #crear un contenedor para los botones de catálogo
-    catalogo_frame = tk.Frame(ventana_principal)
+    tk.Button(barra_menu, text="Modificar datos", **boton_color,
+              command=lambda: pulsar_modificar_datos(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
+    tk.Button(barra_menu, text="Consultar historial", **boton_color,
+              command=lambda: [ventana_principal.destroy(), abrir_ventana_historial()]).pack(side="left", padx=10, ipadx=5, ipady=5)
+    tk.Button(barra_menu, text="Gestiones de Administrador", **boton_color,
+              command=lambda: pulsar_gestiones_admin(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
+
+    # Crear un contenedor para los botones de catálogo
+    catalogo_frame = tk.Frame(ventana_principal, bg="white")
     catalogo_frame.pack(pady=20)
 
-    #agregar botones de ver catálogo y ver catálogo ampliado uno al lado del otro
+    # Agregar botones de ver catálogo
     tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton).pack(side="left", padx=10)
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
 
     if nombreUsuario_actual is not None:
-        tk.Label(text=f"Bienvenido/a, {nombreUsuario_actual}").pack(pady=10)
-        tk.Label(text=f"AQUÍ VAN LAS PELICULAS ALQUILADAS POR EL USUARIO EN LAS ÚLTIMAS 48H").pack(pady=10)
+        tk.Label(ventana_principal, text=f"Bienvenido/a, {nombreUsuario_actual}", bg="white", fg="black").pack(pady=10)
+        tk.Label(ventana_principal, text=f"AQUÍ VAN LAS PELICULAS ALQUILADAS POR EL USUARIO EN LAS ÚLTIMAS 48H",
+                 bg="white", fg="black").pack(pady=10)
 
-    #ejecutar el bucle de eventos de la ventana principal
+    # Ejecutar el bucle de eventos de la ventana principal
     ventana_principal.mainloop()
 
 def cerrar_sesion():

@@ -12,6 +12,7 @@ def abrir_ventana_soliRegistros():
     # Crear ventana
     ventana_solicitudes = tk.Tk()
     ventana_solicitudes.title("Solicitudes de Registros")
+    ventana_solicitudes.configure(bg="#ffffff")  # Fondo blanco
     centrar_ventana(ventana_solicitudes)
     ventana_solicitudes.geometry("600x400")
 
@@ -34,16 +35,16 @@ def abrir_ventana_soliRegistros():
 
         # Verificar si hay solicitudes
         if not solicitudes:
-            tk.Label(marco_interior, text="No hay solicitudes pendientes.", font=("Arial", 12)).pack(pady=20)
+            tk.Label(marco_interior, text="No hay solicitudes pendientes.", font=("Arial", 12), bg="#ffffff", fg="#000000").pack(pady=20)
         else:
             # Crear un contenedor para cada solicitud
             for nombre_usuario in solicitudes:
                 # Crear un marco para cada solicitud
-                solicitud_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5)
+                solicitud_frame = tk.Frame(marco_interior, relief="solid", padx=10, pady=5, bg="#ffffff")
                 solicitud_frame.pack(fill="x", pady=5)
 
                 # Mostrar nombre de usuario
-                tk.Label(solicitud_frame, text=f"Usuario: {nombre_usuario}", font=("Arial", 12)).pack(side="left")
+                tk.Label(solicitud_frame, text=f"Usuario: {nombre_usuario}", font=("Arial", 12), bg="#ffffff", fg="#000000").pack(side="left")
 
                 # Botón para aceptar solicitud
                 tk.Button(solicitud_frame, text="Aceptar solicitud", **estilo_boton,
@@ -67,20 +68,20 @@ def abrir_ventana_soliRegistros():
             messagebox.showerror("Error", f"No se pudo aceptar la solicitud de {nombre_usuario}.\nError: {e}")
 
     # Título
-    tk.Label(ventana_solicitudes, text="Solicitudes de Registros", font=fuente_titulo).pack(pady=10)
+    tk.Label(ventana_solicitudes, text="Solicitudes de Registros", font=fuente_titulo, bg="#ffffff", fg="#000000").pack(pady=10)
 
     # Crear un canvas con scrollbar
-    frame_canvas = tk.Frame(ventana_solicitudes)
+    frame_canvas = tk.Frame(ventana_solicitudes, bg="#ffffff")
     frame_canvas.pack(fill="both", expand=True)
 
-    canvas = tk.Canvas(frame_canvas)
+    canvas = tk.Canvas(frame_canvas, bg="#ffffff")
     scrollbar = tk.Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
     scrollbar.pack(side="right", fill="y")
     canvas.pack(side="left", fill="both", expand=True)
     canvas.config(yscrollcommand=scrollbar.set)
 
     # Crear un marco interior dentro del canvas
-    marco_interior = tk.Frame(canvas)
+    marco_interior = tk.Frame(canvas, bg="#ffffff")
     canvas.create_window((0, 0), window=marco_interior, anchor="nw")
 
     # Inicializar las solicitudes al abrir la ventana
