@@ -112,24 +112,31 @@ def abrir_ventana_principal():
     barra_menu = tk.Frame(ventana_principal, bg="white", height=40)
     barra_menu.pack(fill="x")
 
+    # Crear un contenedor centrado para los botones
+    contenedor_botones = tk.Frame(barra_menu, bg="white")
+    contenedor_botones.pack(expand=True)
+
     # Obtener el nombre del usuario actual
     nombreUsuario_actual = GestorGeneral.nombusuarioactual
 
     # Agregar botones a la barra de menú
     boton_color = {"bg": "white", "fg": "black", "bd": 0}  # Botones adaptados al fondo blanco
     if nombreUsuario_actual is None:
-        tk.Button(barra_menu, text="Iniciar sesión", **boton_color,
+        tk.Button(contenedor_botones, text="Iniciar sesión", **boton_color,
                   command=lambda: [ventana_principal.destroy(), abrir_ventana_login()]).pack(side="left", padx=10, ipadx=5, ipady=5)
     else:
-        tk.Button(barra_menu, text="Cerrar sesión", **boton_color,
+        tk.Button(contenedor_botones, text="Cerrar sesión", **boton_color,
                   command=lambda: [ventana_principal.destroy(), cerrar_sesion()]).pack(side="left", padx=10, ipadx=5, ipady=5)
 
-    tk.Button(barra_menu, text="Modificar datos", **boton_color,
+    tk.Button(contenedor_botones, text="Modificar datos", **boton_color,
               command=lambda: pulsar_modificar_datos(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
-    tk.Button(barra_menu, text="Consultar historial", **boton_color,
+    tk.Button(contenedor_botones, text="Consultar historial", **boton_color,
               command=lambda: [ventana_principal.destroy(), abrir_ventana_historial()]).pack(side="left", padx=10, ipadx=5, ipady=5)
-    tk.Button(barra_menu, text="Gestiones de Administrador", **boton_color,
-              command=lambda: pulsar_gestiones_admin(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
+
+    # Solo mostrar el botón de gestiones de administrador si el usuario es administrador
+    if nombreUsuario_actual is not None and GestorGeneral.get_instance().obtener_usuarioAct().esAdmin():
+        tk.Button(contenedor_botones, text="Administrar", **boton_color,
+                  command=lambda: pulsar_gestiones_admin(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
 
     # Crear un contenedor para los botones de catálogo
     catalogo_frame = tk.Frame(ventana_principal, bg="white")
@@ -148,7 +155,7 @@ def abrir_ventana_principal():
     ventana_principal.mainloop()
 
 def cerrar_sesion():
-    GestorGeneral.nombusuarioactual=None
+    GestorGeneral.nombusuarioactual = None
     abrir_ventana_principal()
 
 def pulsar_modificar_datos(ventana_principal):
@@ -168,7 +175,7 @@ def pulsar_gestiones_admin(ventana_principal):
         abrir_ventana_admin()
 
 
-#iniciar la ventana principal si este archivo es ejecutado directamente
+# Iniciar la ventana principal si este archivo es ejecutado directamente
 if __name__ == "__main__":
     initialize_database()
     GestorGeneral.get_instance().cargar_datos()
