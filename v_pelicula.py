@@ -24,20 +24,19 @@ def abrir_ventana_pelicula(pelicula):
 
     # Mostrar reseñas existentes
     tk.Label(ventana_pelicula, text="Reseñas:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
-    frame_reseñas = tk.Frame(ventana_pelicula, bg="white")
+    frame_reseñas = tk.Frame(ventana_pelicula, bg="white", relief="groove", bd=2)
     frame_reseñas.pack(fill=tk.BOTH, expand=True, pady=5, padx=10)
 
     # Obtener reseñas desde la base de datos
     reseñas = gestor_resenas.obtener_resenas(pelicula.titulo, pelicula.ano)
     if reseñas:
         for resena in reseñas:
-            tk.Label(frame_reseñas, text=f"Usuario: {resena.idUsuario}", bg="white", fg="black",
-                     font=("Arial", 10, "bold")).pack(anchor="w")
-            tk.Label(frame_reseñas, text=f"Puntuación: {resena.puntuacion}", bg="white", fg="black").pack(anchor="w")
-            tk.Label(frame_reseñas, text=f"Comentario: {resena.comentario}", bg="white", fg="black",
-                     wraplength=450).pack(anchor="w", pady=5)
-            tk.Frame(frame_reseñas, height=2, bg="grey").pack(fill=tk.X, pady=5)
+            resena_frame = tk.Frame(frame_reseñas, bg="#f0f0f0", relief="ridge", bd=2)
+            resena_frame.pack(fill=tk.X, pady=5, padx=5)
 
+            tk.Label(resena_frame, text=f"Usuario: {resena.idUsuario}", bg="#f0f0f0", fg="black", font=("Arial", 10, "bold")).pack(anchor="w", pady=2)
+            tk.Label(resena_frame, text=f"Puntuación: {resena.puntuacion}", bg="#f0f0f0", fg="black").pack(anchor="w", pady=2)
+            tk.Label(resena_frame, text=f"Comentario: {resena.comentario}", bg="#f0f0f0", fg="black", wraplength=450).pack(anchor="w", pady=2)
     else:
         tk.Label(frame_reseñas, text="No hay reseñas disponibles.", bg="white", fg="black").pack()
 
@@ -48,40 +47,63 @@ def abrir_ventana_pelicula(pelicula):
         frame_formulario = tk.Frame(ventana_pelicula, bg="white")
         frame_formulario.pack(pady=5)
 
-        tk.Label(frame_formulario, text="Puntuación (1-5):", bg="white", fg="black").grid(row=0, column=0, pady=5, padx=5, sticky="e")
-        puntuacion = tk.Entry(frame_formulario, width=5)
-        puntuacion.grid(row=0, column=1, pady=5, padx=5)
+        tk.Label(frame_formulario, text="Puntuación:", bg="white", fg="black").grid(row=0, column=0, pady=5, padx=5, sticky="e")
+
+        puntuacion_var = tk.IntVar()
+        estrellas_frame = tk.Frame(frame_formulario, bg="white")
+        estrellas_frame.grid(row=0, column=1, pady=5, padx=5)
+        for i in range(1, 6):
+            tk.Radiobutton(estrellas_frame, text=f"{i}", variable=puntuacion_var, value=i, bg="white").pack(side=tk.LEFT, padx=5)
 
         tk.Label(frame_formulario, text="Comentario:", bg="white", fg="black").grid(row=1, column=0, pady=5, padx=5, sticky="ne")
         comentario = tk.Text(frame_formulario, width=40, height=5)
         comentario.grid(row=1, column=1, pady=5, padx=5)
 
+        # Cargar reseña existente si existe
+        reseña_existente = next((r for r in reseñas if r.idUsuario == usuario_actual), None)
+        if reseña_existente:
+            puntuacion_var.set(reseña_existente.puntuacion)
+            comentario.insert("1.0", reseña_existente.comentario)
+
         def guardar_resena():
             try:
-                puntuacion_valor = int(puntuacion.get())
-                if not (1 <= puntuacion_valor <= 5):
-                    raise ValueError("La puntuación debe estar entre 1 y 5.")
+                puntuacion_valor = puntuacion_var.get()
+                if not puntuacion_valor:
+                    raise ValueError("Seleccione una puntuación.")
 
                 comentario_valor = comentario.get("1.0", tk.END).strip()
                 if not comentario_valor:
                     raise ValueError("El comentario no puede estar vacío.")
 
-                # Crear un objeto Resena
-                nueva_resena = Resena(
-                    idUsuario=usuario_actual,
-                    titulo=pelicula.titulo,
-                    ano=pelicula.ano,
-                    puntuacion=puntuacion_valor,
-                    comentario=comentario_valor
-                )
-
-                # Pasar el objeto Resena a agregar_resena
-                if gestor_resenas.agregar_resena(nueva_resena):
-                    messagebox.showinfo("Éxito", "Reseña añadida correctamente.")
-                    ventana_pelicula.destroy()
-                    abrir_ventana_pelicula(pelicula)  # Refrescar la ventana
+                if reseña_existente:
+                    # Modificar reseña existente
+                    if gestor_resenas.modificar_resena(
+                            usuario_actual,
+                            pelicula.titulo,
+                            pelicula.ano,
+                            puntuacion_valor,
+                            comentario_valor
+                    ):
+                        messagebox.showinfo("Éxito", "Reseña actualizada correctamente.")
+                    else:
+                        messagebox.showerror("Error", "No se pudo actualizar la reseña.")
                 else:
-                    messagebox.showerror("Error", "No se pudo guardar la reseña.")
+                    # Crear nueva reseña
+                    nueva_resena = Resena(
+                        idUsuario=usuario_actual,
+                        titulo=pelicula.titulo,
+                        ano=pelicula.ano,
+                        puntuacion=puntuacion_valor,
+                        comentario=comentario_valor
+                    )
+
+                    if gestor_resenas.agregar_resena(nueva_resena):
+                        messagebox.showinfo("Éxito", "Reseña añadida correctamente.")
+                    else:
+                        messagebox.showerror("Error", "No se pudo guardar la reseña.")
+
+                ventana_pelicula.destroy()
+                abrir_ventana_pelicula(pelicula)  # Refrescar la ventana
             except ValueError as e:
                 messagebox.showerror("Error", str(e))
 
@@ -89,8 +111,9 @@ def abrir_ventana_pelicula(pelicula):
             ventana_pelicula,
             text="Guardar Reseña",
             command=guardar_resena,
-            bg="blue",
-            fg="white"
+            bg="#007BFF",
+            fg="white",
+            font=("Arial", 10, "bold")
         ).pack(pady=10)
 
     # Botón para cerrar
