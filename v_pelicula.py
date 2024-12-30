@@ -5,6 +5,14 @@ from GestorResena import GestorResena
 from GestorGeneral import GestorGeneral
 from Resena import Resena
 
+# Definir el estilo de los botones
+estilo_boton = {
+    "font": ("Arial", 10, "bold"),
+    "bg": "white",  # Color del fondo de los botones
+    "fg": "black",  # Color del texto de los botones
+    "padx": 5,      # Margen en los lados del texto
+    "pady": 5       # Margen vertical
+}
 
 def abrir_ventana_pelicula(pelicula):
     gestor_resenas = GestorResena()
@@ -15,16 +23,34 @@ def abrir_ventana_pelicula(pelicula):
     ventana_pelicula.geometry("500x600")
     ventana_pelicula.configure(bg="white")
 
+    # Crear un canvas con una barra de desplazamiento
+    canvas = tk.Canvas(ventana_pelicula, bg="white")
+    scrollbar = tk.Scrollbar(ventana_pelicula, orient="vertical", command=canvas.yview)
+    scrollable_frame = tk.Frame(canvas, bg="white")
+
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
     # Mostrar información de la película
-    tk.Label(ventana_pelicula, text=f"Título: {pelicula.titulo}", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=5)
-    tk.Label(ventana_pelicula, text=f"Año: {pelicula.ano}", bg="white", fg="black").pack(pady=5)
-    tk.Label(ventana_pelicula, text=f"Director: {pelicula.director}", bg="white", fg="black").pack(pady=5)
-    tk.Label(ventana_pelicula, text=f"Duración: {pelicula.duracion} min", bg="white", fg="black").pack(pady=5)
-    tk.Label(ventana_pelicula, text=f"Descripción: {pelicula.descripcion}", bg="white", fg="black", wraplength=450).pack(pady=5)
+    tk.Label(scrollable_frame, text=f"Título: {pelicula.titulo}", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=5)
+    tk.Label(scrollable_frame, text=f"Año: {pelicula.ano}", bg="white", fg="black").pack(pady=5)
+    tk.Label(scrollable_frame, text=f"Director: {pelicula.director}", bg="white", fg="black").pack(pady=5)
+    tk.Label(scrollable_frame, text=f"Duración: {pelicula.duracion} min", bg="white", fg="black").pack(pady=5)
+    tk.Label(scrollable_frame, text=f"Descripción: {pelicula.descripcion}", bg="white", fg="black", wraplength=450).pack(pady=5)
 
     # Mostrar reseñas existentes
-    tk.Label(ventana_pelicula, text="Reseñas:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
-    frame_reseñas = tk.Frame(ventana_pelicula, bg="white", relief="groove", bd=2)
+    tk.Label(scrollable_frame, text="Reseñas:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
+    frame_reseñas = tk.Frame(scrollable_frame, bg="white", relief="groove", bd=2)
     frame_reseñas.pack(fill=tk.BOTH, expand=True, pady=5, padx=10)
 
     # Obtener reseñas desde la base de datos
@@ -35,16 +61,16 @@ def abrir_ventana_pelicula(pelicula):
             resena_frame.pack(fill=tk.X, pady=5, padx=5)
 
             tk.Label(resena_frame, text=f"Usuario: {resena.idUsuario}", bg="#f0f0f0", fg="black", font=("Arial", 10, "bold")).pack(anchor="w", pady=2)
-            tk.Label(resena_frame, text=f"Puntuación: {resena.puntuacion}", bg="#f0f0f0", fg="black").pack(anchor="w", pady=2)
+            tk.Label(resena_frame, text=f"Puntuación: {resena.puntuacion} / 5", bg="#f0f0f0", fg="black").pack(anchor="w", pady=2)
             tk.Label(resena_frame, text=f"Comentario: {resena.comentario}", bg="#f0f0f0", fg="black", wraplength=450).pack(anchor="w", pady=2)
     else:
-        tk.Label(frame_reseñas, text="No hay reseñas disponibles.", bg="white", fg="black").pack()
+        tk.Label(frame_reseñas, text="Aún no hay reseñas disponibles.", bg="white", fg="black").pack()
 
     # Añadir nueva reseña si hay un usuario iniciado
     if usuario_actual:
-        tk.Label(ventana_pelicula, text="Añadir una reseña:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
+        tk.Label(scrollable_frame, text="Añadir una reseña:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
 
-        frame_formulario = tk.Frame(ventana_pelicula, bg="white")
+        frame_formulario = tk.Frame(scrollable_frame, bg="white")
         frame_formulario.pack(pady=5)
 
         tk.Label(frame_formulario, text="Puntuación:", bg="white", fg="black").grid(row=0, column=0, pady=5, padx=5, sticky="e")
@@ -53,7 +79,7 @@ def abrir_ventana_pelicula(pelicula):
         estrellas_frame = tk.Frame(frame_formulario, bg="white")
         estrellas_frame.grid(row=0, column=1, pady=5, padx=5)
         for i in range(1, 6):
-            tk.Radiobutton(estrellas_frame, text=f"{i}", variable=puntuacion_var, value=i, bg="white").pack(side=tk.LEFT, padx=5)
+            tk.Radiobutton(estrellas_frame, text=f"{i}", variable=puntuacion_var, value=i, bg="white", fg="black", selectcolor="white", activebackground="white", activeforeground="black", highlightbackground="black", highlightcolor="black").pack(side=tk.LEFT, padx=5)
 
         tk.Label(frame_formulario, text="Comentario:", bg="white", fg="black").grid(row=1, column=0, pady=5, padx=5, sticky="ne")
         comentario = tk.Text(frame_formulario, width=40, height=5)
@@ -69,11 +95,11 @@ def abrir_ventana_pelicula(pelicula):
             try:
                 puntuacion_valor = puntuacion_var.get()
                 if not puntuacion_valor:
-                    raise ValueError("Seleccione una puntuación.")
+                    raise ValueError("La reseña debe tener una puntuación.")
 
                 comentario_valor = comentario.get("1.0", tk.END).strip()
                 if not comentario_valor:
-                    raise ValueError("El comentario no puede estar vacío.")
+                    raise ValueError("El comentario de la reseña no puede estar vacío. Por favor, complétalo.")
 
                 if reseña_existente:
                     # Modificar reseña existente
@@ -108,17 +134,14 @@ def abrir_ventana_pelicula(pelicula):
                 messagebox.showerror("Error", str(e))
 
         tk.Button(
-            ventana_pelicula,
+            scrollable_frame,
             text="Guardar Reseña",
             command=guardar_resena,
-            bg="#007BFF",
-            fg="white",
-            font=("Arial", 10, "bold")
+            **estilo_boton
         ).pack(pady=10)
 
     # Botón para cerrar
-    tk.Button(ventana_pelicula, text="Cerrar", command=ventana_pelicula.destroy, bg="white", fg="black").pack(pady=20)
-
+    tk.Button(scrollable_frame, text="Cerrar", command=ventana_pelicula.destroy, **estilo_boton).pack(pady=20)
 
 def abrir_ventana_catalogo():
     gestor = GestorPelicula()
@@ -126,7 +149,7 @@ def abrir_ventana_catalogo():
 
     ventana_catalogo = tk.Toplevel()
     ventana_catalogo.title("Catálogo de Películas")
-    ventana_catalogo.geometry("700x400")
+    ventana_catalogo.geometry("700x450")
     ventana_catalogo.configure(bg="white")
 
     tk.Label(ventana_catalogo, text="Catálogo de Películas", bg="white", fg="black", font=("Arial", 16)).pack(pady=10)
@@ -163,5 +186,5 @@ def abrir_ventana_catalogo():
         ventana_catalogo,
         text="Cerrar",
         command=ventana_catalogo.destroy,
-        bg="white", fg="black"
+        **estilo_boton
     ).pack(pady=10)
