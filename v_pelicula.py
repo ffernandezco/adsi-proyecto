@@ -149,7 +149,7 @@ def abrir_ventana_catalogo():
     tk.Label(ventana_catalogo, text="Catálogo de Películas", bg="white", fg="black", font=("Arial", 16)).pack(pady=10)
 
     # Vista general de las películas del catálogo
-    # TODO: añadir puntuaciones de reseñas, funciones del enunciado, etc.
+    # Añadir puntuaciones de reseñas, funciones del enunciado, etc.
 
     tree = ttk.Treeview(ventana_catalogo, columns=("Año", "Duración"), show="tree headings", height=15)
     tree.heading("Año", text="Año")
