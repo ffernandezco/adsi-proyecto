@@ -4,15 +4,7 @@ from GestorPelicula import GestorPelicula
 from GestorResena import GestorResena
 from GestorGeneral import GestorGeneral
 from Resena import Resena
-
-# Definir el estilo de los botones
-estilo_boton = {
-    "font": ("Arial", 10, "bold"),
-    "bg": "white",  # Color del fondo de los botones
-    "fg": "black",  # Color del texto de los botones
-    "padx": 5,      # Margen en los lados del texto
-    "pady": 5       # Margen vertical
-}
+from estilo import estilo_boton
 
 def abrir_ventana_pelicula(pelicula):
     gestor_resenas = GestorResena()
@@ -23,7 +15,7 @@ def abrir_ventana_pelicula(pelicula):
     ventana_pelicula.geometry("500x600")
     ventana_pelicula.configure(bg="white")
 
-    # Crear un canvas con una barra de desplazamiento
+    # Añadir barra de desplazamiento para evitar problemas de visualización
     canvas = tk.Canvas(ventana_pelicula, bg="white")
     scrollbar = tk.Scrollbar(ventana_pelicula, orient="vertical", command=canvas.yview)
     scrollable_frame = tk.Frame(canvas, bg="white")
@@ -41,22 +33,23 @@ def abrir_ventana_pelicula(pelicula):
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
-    # Mostrar información de la película
+    # Datos de la película
     tk.Label(scrollable_frame, text=f"Título: {pelicula.titulo}", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=5)
     tk.Label(scrollable_frame, text=f"Año: {pelicula.ano}", bg="white", fg="black").pack(pady=5)
     tk.Label(scrollable_frame, text=f"Director: {pelicula.director}", bg="white", fg="black").pack(pady=5)
     tk.Label(scrollable_frame, text=f"Duración: {pelicula.duracion} min", bg="white", fg="black").pack(pady=5)
     tk.Label(scrollable_frame, text=f"Descripción: {pelicula.descripcion}", bg="white", fg="black", wraplength=450).pack(pady=5)
 
-    # Mostrar reseñas existentes
+    # Sección de reseñas
     tk.Label(scrollable_frame, text="Reseñas:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
     frame_reseñas = tk.Frame(scrollable_frame, bg="white", relief="groove", bd=2)
     frame_reseñas.pack(fill=tk.BOTH, expand=True, pady=5, padx=10)
 
-    # Obtener reseñas desde la base de datos
+    # Llamar al gestor de reseñas para obtener las reseñas
     reseñas = gestor_resenas.obtener_resenas(pelicula.titulo, pelicula.ano)
     if reseñas:
         for resena in reseñas:
+            # Muestra públicamente cada una de las reseñas con un diseño adaptado
             resena_frame = tk.Frame(frame_reseñas, bg="#f0f0f0", relief="ridge", bd=2)
             resena_frame.pack(fill=tk.X, pady=5, padx=5)
 
@@ -66,7 +59,7 @@ def abrir_ventana_pelicula(pelicula):
     else:
         tk.Label(frame_reseñas, text="Aún no hay reseñas disponibles.", bg="white", fg="black").pack()
 
-    # Añadir nueva reseña si hay un usuario iniciado
+    # Añadir nueva reseña - Solo si se ha loggeado el usuario
     if usuario_actual:
         tk.Label(scrollable_frame, text="Añadir una reseña:", bg="white", fg="black", font=("Arial", 12, "bold")).pack(pady=10)
 
@@ -85,7 +78,8 @@ def abrir_ventana_pelicula(pelicula):
         comentario = tk.Text(frame_formulario, width=40, height=5)
         comentario.grid(row=1, column=1, pady=5, padx=5)
 
-        # Cargar reseña existente si existe
+        # Modificar reseñas
+        # Si existe ya una reseña para el usuario, se mostrará a la hora de añadir
         reseña_existente = next((r for r in reseñas if r.idUsuario == usuario_actual), None)
         if reseña_existente:
             puntuacion_var.set(reseña_existente.puntuacion)
@@ -114,7 +108,7 @@ def abrir_ventana_pelicula(pelicula):
                     else:
                         messagebox.showerror("Error", "No se pudo actualizar la reseña.")
                 else:
-                    # Crear nueva reseña
+                    # Crear nueva reseña si no se ha creado una previa
                     nueva_resena = Resena(
                         idUsuario=usuario_actual,
                         titulo=pelicula.titulo,
@@ -154,7 +148,9 @@ def abrir_ventana_catalogo():
 
     tk.Label(ventana_catalogo, text="Catálogo de Películas", bg="white", fg="black", font=("Arial", 16)).pack(pady=10)
 
-    # Crear el Treeview para mostrar las películas
+    # Vista general de las películas del catálogo
+    # TODO: añadir puntuaciones de reseñas, funciones del enunciado, etc.
+
     tree = ttk.Treeview(ventana_catalogo, columns=("Año", "Duración"), show="tree headings", height=15)
     tree.heading("Año", text="Año")
     tree.heading("Duración", text="Duración (min)")
@@ -163,13 +159,13 @@ def abrir_ventana_catalogo():
     tree.column("Año", width=100, anchor="center")
     tree.column("Duración", width=150, anchor="center")
 
-    # Insertar las películas en el Treeview
+    # Insertar las películas a la tabla
     for pelicula in peliculas:
         tree.insert("", "end", text=f"{pelicula.titulo}", values=(pelicula.ano, pelicula.duracion))
 
     tree.pack(pady=10, fill=tk.BOTH, expand=True)
 
-    # Acción al hacer doble clic en una película
+    # Doble clic despliega ventana de información sobre la película
     def mostrar_pelicula_seleccionada(event):
         item = tree.selection()
         if item:
