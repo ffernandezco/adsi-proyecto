@@ -20,7 +20,7 @@ class GestorResena:
                     PRIMARY KEY (idUsuario, titulo, ano)
                 )
             """)
-            # Crear tabla de películas (simulación para este ejemplo)
+            # Simular una tabla sencilla con películas solo con las PK para realizar las pruebas
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS peliculas (
                     titulo TEXT,
@@ -52,11 +52,27 @@ class GestorResena:
             if not pelicula_existe:
                 return False
 
-            # Intentar insertar la reseña
+            # Verificar si la reseña ya existe
             cursor.execute("""
-                INSERT INTO resenas (idUsuario, titulo, ano, puntuacion, comentario)
-                VALUES (?, ?, ?, ?, ?)
-            """, (resena.idUsuario, resena.titulo, resena.ano, resena.puntuacion, resena.comentario))
+                SELECT COUNT(*) FROM resenas
+                WHERE idUsuario = ? AND titulo = ? AND ano = ?
+            """, (resena.idUsuario, resena.titulo, resena.ano))
+            resena_existe = cursor.fetchone()[0] > 0
+
+            if resena_existe:
+                # Actualizar la reseña existente
+                cursor.execute("""
+                    UPDATE resenas
+                    SET puntuacion = ?, comentario = ?
+                    WHERE idUsuario = ? AND titulo = ? AND ano = ?
+                """, (resena.puntuacion, resena.comentario, resena.idUsuario, resena.titulo, resena.ano))
+            else:
+                # Insertar la nueva reseña
+                cursor.execute("""
+                    INSERT INTO resenas (idUsuario, titulo, ano, puntuacion, comentario)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (resena.idUsuario, resena.titulo, resena.ano, resena.puntuacion, resena.comentario))
+
             self.conn.commit()
             return True
         except sqlite3.IntegrityError:
