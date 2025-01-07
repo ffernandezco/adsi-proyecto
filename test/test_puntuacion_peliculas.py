@@ -13,7 +13,7 @@ class TestGestorResena(unittest.TestCase):
 
         # Agregar película
         cursor = self.conn.cursor()
-        cursor.execute("INSERT INTO peliculas (titulo, ano) VALUES (?, ?)", ("Película de Prueba", 2025))
+        cursor.execute("INSERT INTO pelicula (titulo, ano) VALUES (?, ?)", ("Película de Prueba", 2025))
         self.conn.commit()
 
         self.gestor_resena.agregar_resena(self.reseña_existente)

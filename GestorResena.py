@@ -22,7 +22,7 @@ class GestorResena:
             """)
             # Simular una tabla sencilla con películas solo con las PK para realizar las pruebas
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS peliculas (
+                CREATE TABLE IF NOT EXISTS pelicula (
                     titulo TEXT,
                     ano INTEGER,
                     PRIMARY KEY (titulo, ano)
@@ -45,7 +45,7 @@ class GestorResena:
 
             # Verificar si la película existe
             cursor.execute("""
-                SELECT COUNT(*) FROM peliculas
+                SELECT COUNT(*) FROM pelicula
                 WHERE titulo = ? AND ano = ?
             """, (resena.titulo, resena.ano))
             pelicula_existe = cursor.fetchone()[0] > 0
