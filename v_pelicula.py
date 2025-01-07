@@ -89,11 +89,11 @@ def abrir_ventana_pelicula(pelicula):
             try:
                 puntuacion_valor = puntuacion_var.get()
                 if not puntuacion_valor:
-                    raise ValueError("La reseña debe tener una puntuación.")
+                    raise ValueError("La reseña debe tener una puntuación. Por favor, valora la película del 1 al 5 y vuelve a intentarlo.")
 
                 comentario_valor = comentario.get("1.0", tk.END).strip()
                 if not comentario_valor:
-                    raise ValueError("El comentario de la reseña no puede estar vacío. Por favor, complétalo.")
+                    raise ValueError("Debes completar el comentario de la reseña. ¿Qué te ha parecido la película?")
 
                 if reseña_existente:
                     # Modificar reseña existente
@@ -104,7 +104,7 @@ def abrir_ventana_pelicula(pelicula):
                             puntuacion_valor,
                             comentario_valor
                     ):
-                        messagebox.showinfo("Éxito", "Reseña actualizada correctamente.")
+                        messagebox.showinfo("Éxito", "Reseña modificada correctamente.")
                     else:
                         messagebox.showerror("Error", "No se pudo actualizar la reseña.")
                 else:
@@ -133,7 +133,6 @@ def abrir_ventana_pelicula(pelicula):
             command=guardar_resena,
             **estilo_boton
         ).pack(pady=10)
-
     # Botón para cerrar
     tk.Button(scrollable_frame, text="Cerrar", command=ventana_pelicula.destroy, **estilo_boton).pack(pady=20)
 
