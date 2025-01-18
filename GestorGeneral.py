@@ -66,6 +66,7 @@ class GestorGeneral:
 
     # Reseñas
     def agregar_resena(self, idUsuario, titulo, ano, puntuacion, comentario):
+        from Resena import Resena
         # Permite agregar reseñas a partir del gestor de puntuaciones
         resena = Resena(idUsuario, titulo, ano, puntuacion, comentario)
         return self.gestor_resena.agregar_resena(resena)
