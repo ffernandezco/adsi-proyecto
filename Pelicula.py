@@ -9,3 +9,7 @@ class Pelicula:
 
     def __str__(self):
         return f"{self.titulo} ({self.ano}) - {self.director}"
+    def getTitulo(self):
+        return self.titulo
+    def getAno(self):
+        return self.ano
