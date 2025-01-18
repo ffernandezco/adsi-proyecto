@@ -1,11 +1,11 @@
-from GestorPelicula import GestorPelicula
 from GestorUsuarios import GestorUsuarios
 from GestorResena import GestorResena
-from GestorAlquileres import GestorAlquileres
+
 
 class GestorGeneral:
     _instance = None  # Variable de clase para almacenar la única instancia
     nombusuarioactual = None  # Atributo estático
+
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(GestorGeneral, cls).__new__(cls)
@@ -68,16 +68,21 @@ class GestorGeneral:
 
     # Reseñas
     def agregar_resena(self, idUsuario, titulo, ano, puntuacion, comentario):
+        from Resena import Resena
+        # Permite agregar reseñas a partir del gestor de puntuaciones
         resena = Resena(idUsuario, titulo, ano, puntuacion, comentario)
         return self.gestor_resena.agregar_resena(resena)
 
     def modificar_resena(self, idUsuario, titulo, ano, puntuacion, comentario):
+        # Permite modificar reseñas existentes a partir del gestor de puntuaciones
         return self.gestor_resena.modificar_resena(idUsuario, titulo, ano, puntuacion, comentario)
 
     def obtener_resenas(self, titulo, ano):
+        # Permite obtener un listado de reseñas de una película concreta a partir del gestor de puntuaciones
         return self.gestor_resena.obtener_resenas(titulo, ano)
 
     def eliminar_resena(self, idUsuario, titulo, ano):
+        # Permite eliminar una reseña existente a partir del gestor de puntuaciones
         return self.gestor_resena.eliminar_resena(idUsuario, titulo, ano)
 
     #Alquiler

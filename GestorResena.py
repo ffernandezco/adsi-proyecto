@@ -7,6 +7,7 @@ class GestorResena:
         self._crear_tablas()
 
     def _crear_tablas(self):
+        # Crear las tablas reseñas y películas en la base de datos si aún no existen
         try:
             cursor = self.conn.cursor()
             # Crear tabla de reseñas
@@ -33,6 +34,7 @@ class GestorResena:
             print(f"Error al crear las tablas: {e}")
 
     def agregar_resena(self, resena):
+        # Añadir reseñas en las películas o modificarlas si ya existen
         if not resena.idUsuario:
             raise ValueError("Usuario no identificado.")
         if resena.puntuacion is None:
@@ -79,6 +81,7 @@ class GestorResena:
             return False
 
     def modificar_resena(self, idUsuario, titulo, ano, puntuacion, comentario):
+        # Modificar datos de una reseña existente
         if puntuacion is None:
             raise ValueError("La puntuación es obligatoria.")
         if not comentario:
@@ -113,6 +116,7 @@ class GestorResena:
             return False
 
     def obtener_resenas(self, titulo, ano):
+        # Devuelve una lista de reseñas asociadas a una película
         try:
             cursor = self.conn.cursor()
             cursor.execute("""
@@ -130,6 +134,7 @@ class GestorResena:
             return []
 
     def eliminar_resena(self, idUsuario, titulo, ano):
+        # Permite borrar una reseña existente creada previamente por un usuario
         try:
             cursor = self.conn.cursor()
             cursor.execute("""
