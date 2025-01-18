@@ -7,6 +7,8 @@ from Resena import Resena
 from estilo import estilo_boton
 
 def abrir_ventana_pelicula(pelicula):
+    # Abrir una ventana que muestre la información detallada de una película
+    # Incuye dentro la gestión de las reseñas
     gestor_resenas = GestorResena()
     usuario_actual = GestorGeneral.get_instance().nombusuarioactual
 
