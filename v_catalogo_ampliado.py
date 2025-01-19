@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import requests
 from GestorSolicitud import GestorSolicitud  # Importar el Gestor de Solicitudes
+
 API_URL = "http://www.omdbapi.com/"
 API_KEY = "574cd6f4"
 def obtener_peliculas():
@@ -28,7 +29,9 @@ def abrir_ventana_catalogo_ampliado():
     # Crear la ventana para el catálogo ampliado
     ventana_catalogo = tk.Toplevel()
     ventana_catalogo.title("Catálogo Ampliado de Películas")
+
     ventana_catalogo.geometry("700x450")
+
     # Obtener las primeras 10 películas desde la API
     peliculas = obtener_peliculas()
     # Crear un Frame principal para contener todas las películas

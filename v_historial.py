@@ -6,7 +6,7 @@ from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, centrar_ventana
 
 def abrir_ventana_historial():
     from v_main import abrir_ventana_principal
-    ventana_historial = tk.Tk()
+    ventana_historial = tk.Toplevel()
     ventana_historial.title("Historial de Películas Alquiladas")
     ventana_historial.configure(bg="#ffffff")  # Fondo blanco
     centrar_ventana(ventana_historial)

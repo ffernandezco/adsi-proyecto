@@ -1,12 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from GestorPelicula import GestorPelicula
 from GestorResena import GestorResena
 from GestorGeneral import GestorGeneral
 from Resena import Resena
-from estilo import estilo_boton, centrar_ventana
-
-
+from estilo import estilo_boton
 
 def abrir_ventana_pelicula(pelicula):
     # Abrir una ventana que muestre la información detallada de una película
@@ -16,7 +13,7 @@ def abrir_ventana_pelicula(pelicula):
 
     ventana_pelicula = tk.Toplevel()
     ventana_pelicula.title(f"Detalles de {pelicula.titulo}")
-    ventana_pelicula.geometry(f"500x600+{(ventana_pelicula.winfo_screenwidth() // 2) - (500 // 2)}+{(ventana_pelicula.winfo_screenheight() // 2 - 60) - (600 // 2)}")
+    ventana_pelicula.geometry("500x600")
     ventana_pelicula.configure(bg="white")
 
     # Añadir barra de desplazamiento para evitar problemas de visualización
@@ -156,13 +153,19 @@ def abrir_ventana_pelicula(pelicula):
     tk.Button(scrollable_frame, text="Cerrar", command=ventana_pelicula.destroy, **estilo_boton).pack(pady=20)
 
 def abrir_ventana_catalogo():
+<<<<<<< HEAD
+    """
+    Muestra el catálogo actualizado de películas en una ventana nueva.
+    """
+    gestor = GestorPelicula()
+=======
     gestor = GestorGeneral()
     peliculas = gestor.verCatalogo()
+>>>>>>> parent of fdc6540 (Merge pull request #29 from ffernandezco/17-lista-solicitudes)
 
-    ventana_catalogo = tk.Tk()
+    ventana_catalogo = tk.Toplevel()
     ventana_catalogo.title("Catálogo de Películas")
-    centrar_ventana(ventana_catalogo)
-    ventana_catalogo.geometry("600x450")
+    ventana_catalogo.geometry("700x450")
     ventana_catalogo.configure(bg="white")
 
     tk.Label(ventana_catalogo, text="Catálogo de Películas", bg="white", fg="black", font=("Arial", 16)).pack(pady=10)
@@ -188,6 +191,16 @@ def abrir_ventana_catalogo():
     def mostrar_pelicula_seleccionada(event):
         item = tree.selection()
         if item:
+<<<<<<< HEAD
+            titulo = tree.item(item, "text")
+            pelicula = gestor.obtener_pelicula_por_titulo(titulo)
+            if pelicula:
+                abrir_ventana_pelicula(pelicula)
+
+    tree.bind("<Double-1>", mostrar_pelicula)
+
+    tk.Button(ventana_catalogo, text="Cerrar", command=ventana_catalogo.destroy, **estilo_boton).pack(pady=10)
+=======
             pelicula_titulo = tree.item(item, "text")
 
             pelicula_valores = tree.item(item, "values")
@@ -205,3 +218,4 @@ def abrir_ventana_catalogo():
         command=lambda: [ventana_catalogo.destroy(),abrir_ventana_principal()],
         **estilo_boton
     ).pack(pady=10)
+>>>>>>> parent of fdc6540 (Merge pull request #29 from ffernandezco/17-lista-solicitudes)

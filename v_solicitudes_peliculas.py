@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 from GestorSolicitud import GestorSolicitud
 from GestorPelicula import GestorPelicula  # Asegúrate de tener este gestor configurado
+from estilo import estilo_boton
+
 API_URL = "http://www.omdbapi.com/"
 API_KEY = "574cd6f4"
 def abrir_ventana_solicitudes():
@@ -47,4 +49,6 @@ def abrir_ventana_solicitudes():
         # Botón para aceptar la solicitud
         boton_aceptar = tk.Button(frame, text="Aceptar", command=lambda s=solicitud: aceptar_solicitud(s))
         boton_aceptar.pack(side=tk.RIGHT, padx=10)
+
     ventana_solicitudes.mainloop()
+
