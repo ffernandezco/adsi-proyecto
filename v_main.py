@@ -145,7 +145,7 @@ def abrir_ventana_principal():
     catalogo_frame.pack(pady=20)
 
     # Agregar botones de ver catálogo
-    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command= abrir_ventana_catalogo).pack(side="left", padx=10)
+    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command=lambda: [ventana_principal.destroy(), abrir_ventana_catalogo()]).pack(side="left", padx=10)
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
 
     if nombreUsuario_actual is not None:
