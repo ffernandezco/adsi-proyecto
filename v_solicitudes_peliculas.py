@@ -6,7 +6,7 @@ API_URL = "http://www.omdbapi.com/"
 API_KEY = "574cd6f4"
 def abrir_ventana_solicitudes():
     # Crear la ventana de solicitudes
-    ventana_solicitudes = tk.Toplevel()
+    ventana_solicitudes = tk.Tk()
     ventana_solicitudes.title("Solicitudes de Películas")
     ventana_solicitudes.geometry("800x600")
     gestor_solicitudes = GestorSolicitud()
