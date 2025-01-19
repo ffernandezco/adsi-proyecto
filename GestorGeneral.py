@@ -1,3 +1,4 @@
+from GestorAlquileres import GestorAlquileres
 from GestorUsuarios import GestorUsuarios
 from GestorResena import GestorResena
 
