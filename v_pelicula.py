@@ -154,8 +154,8 @@ def abrir_ventana_pelicula(pelicula):
     tk.Button(scrollable_frame, text="Cerrar", command=ventana_pelicula.destroy, **estilo_boton).pack(pady=20)
 
 def abrir_ventana_catalogo():
-    gestor = GestorPelicula()
-    peliculas = gestor.obtener_peliculas()
+    gestor = GestorGeneral()
+    peliculas = gestor.verCatalogo()
 
     ventana_catalogo = tk.Toplevel()
     ventana_catalogo.title("Catálogo de Películas")
@@ -188,7 +188,7 @@ def abrir_ventana_catalogo():
             pelicula_titulo = tree.item(item, "text")
 
             pelicula_valores = tree.item(item, "values")
-            pelicula = gestor.obtener_pelicula_por_titulo_ano(pelicula_titulo, pelicula_valores[0])
+            pelicula = gestor.buscarPelicula(pelicula_titulo, pelicula_valores[0])
             if pelicula:
                 abrir_ventana_pelicula(pelicula)
 
