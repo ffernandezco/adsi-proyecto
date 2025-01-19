@@ -133,7 +133,7 @@ def abrir_ventana_principal():
     tk.Button(contenedor_botones, text="Modificar datos", **boton_color,
               command=lambda: pulsar_modificar_datos(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
     tk.Button(contenedor_botones, text="Consultar historial", **boton_color,
-              command=lambda: [ventana_principal.destroy(),abrir_ventana_historial()]).pack(side="left", padx=10, ipadx=5, ipady=5)
+              command=abrir_ventana_historial).pack(side="left", padx=10, ipadx=5, ipady=5)
 
     # Solo mostrar el botón de gestiones de administrador si el usuario es administrador
     if nombreUsuario_actual is not None and GestorGeneral.get_instance().obtener_usuarioAct().esAdmin():
@@ -145,10 +145,8 @@ def abrir_ventana_principal():
     catalogo_frame.pack(pady=20)
 
     # Agregar botones de ver catálogo
-
-    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command=lambda: [ventana_principal.destroy(), abrir_ventana_catalogo()]).pack(side="left", padx=10)
+    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command= abrir_ventana_catalogo).pack(side="left", padx=10)
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton, command=abrir_ventana_catalogo_ampliado).pack(side="left", padx=10)
-
     if nombreUsuario_actual is not None:
         tk.Label(ventana_principal, text=f"Bienvenido/a, {nombreUsuario_actual}", bg="white", fg="black").pack(pady=10)
 
@@ -200,5 +198,4 @@ def pulsar_gestiones_admin(ventana_principal):
 if __name__ == "__main__":
     initialize_database()
     GestorGeneral.get_instance().cargar_datos()
-    print("Nota: para iniciar sesión como administrador para ver sus funciones -> usuario:admin y contraseña:admin123")
     abrir_ventana_principal()

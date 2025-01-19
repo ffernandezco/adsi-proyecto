@@ -1,7 +1,6 @@
 from GestorAlquileres import GestorAlquileres
 from GestorUsuarios import GestorUsuarios
 from GestorResena import GestorResena
-from GestorPelicula import GestorPelicula
 
 
 class GestorGeneral:
@@ -88,19 +87,11 @@ class GestorGeneral:
         return self.gestor_resena.eliminar_resena(idUsuario, titulo, ano)
 
     #Alquiler
-    def verCatalogo(self):
-        pelis= GestorPelicula.get_instance().obtener_peliculas()
-        if pelis:
-            return pelis
-        return []
-    def buscarPelicula(self, titulo, ano):
-        return GestorPelicula.get_instance().obtener_pelicula_por_titulo_ano(titulo, ano)
     def alquilarPelicula(self,titulo, ano):
         # como el botón solo se muestra a los usuarios que han iniciado sesión (por lo tanto ni cuanta eliminada ni sin aceptar) no compruebo
         idUs= GestorUsuarios.get_instance().idPorUsuario(self.nombusuarioactual)
         if idUs is not None:
             GestorAlquileres.get_instance().nuevoAlquiler(idUs, titulo, ano)
-        return False
 
     def mostrarHistorial(self):
         idUs = GestorUsuarios.get_instance().idPorUsuario(self.nombusuarioactual)
@@ -108,7 +99,7 @@ class GestorGeneral:
         if alquileres:
             return alquileres  # Retorna la lista de alquileres
         return []
-    def mostrarPelis(self): #listado de películas alquiladas y no caducadas
+    def mostrarPelis(self):
         idUs = GestorUsuarios.get_instance().idPorUsuario(self.nombusuarioactual)
         alquileres = GestorAlquileres.get_instance().mostrarPelisNoCaducadas(idUs)
         if alquileres:
