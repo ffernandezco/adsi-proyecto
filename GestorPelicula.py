@@ -1,18 +1,34 @@
 import sqlite3
 from Pelicula import Pelicula
+from typing import List
 
 class GestorPelicula:
-    def __init__(self, db_name="app_database.sqlite"):
-        self.db_name = db_name
+    _instance = None  # Variable de clase para almacenar la única instancia
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(GestorPelicula, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
 
-    def get_instance(self):
+    def __init__(self):
+        if not getattr(self, '_initialized', False):  # Evita inicializar múltiples veces
+            """
+            Inicializa GestorPelicula con una conexión a la base de datos.
+            :param db_path: Ruta al archivo de la base de datos SQLite.
+            """
+            self.db_path = "app_database.sqlite"
+            self.alquileres: List[Pelicula] = []
+            self._initialized = True
+
+    @staticmethod
+    def get_instance():
         if GestorPelicula._instance is None:
             GestorPelicula._instance = GestorPelicula()
         return GestorPelicula._instance
 
     def obtener_peliculas(self):
         try:
-            conn = sqlite3.connect(self.db_name)
+            conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             cursor.execute("SELECT titulo, ano, director, duracion, descripcion, idUsuario FROM pelicula")
             peliculas = [
@@ -29,7 +45,7 @@ class GestorPelicula:
 
     def obtener_pelicula_por_titulo_ano(self, titulo, ano):
         try:
-            conn = sqlite3.connect(self.db_name)
+            conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT titulo, ano, director, duracion, descripcion, idUsuario

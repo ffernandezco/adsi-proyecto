@@ -133,7 +133,7 @@ def abrir_ventana_principal():
     tk.Button(contenedor_botones, text="Modificar datos", **boton_color,
               command=lambda: pulsar_modificar_datos(ventana_principal)).pack(side="left", padx=10, ipadx=5, ipady=5)
     tk.Button(contenedor_botones, text="Consultar historial", **boton_color,
-              command=abrir_ventana_historial).pack(side="left", padx=10, ipadx=5, ipady=5)
+              command=lambda: [ventana_principal.destroy(),abrir_ventana_historial()]).pack(side="left", padx=10, ipadx=5, ipady=5)
 
     # Solo mostrar el botón de gestiones de administrador si el usuario es administrador
     if nombreUsuario_actual is not None and GestorGeneral.get_instance().obtener_usuarioAct().esAdmin():
