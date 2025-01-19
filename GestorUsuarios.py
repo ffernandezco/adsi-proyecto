@@ -329,3 +329,11 @@ class GestorUsuarios:
             except sqlite3.Error as e:
                 print(f"Error al modificar el usuario: {e}")
                 return False
+
+    def idPorUsuario(self,nomUs):
+        unUsuario=self.buscarUsuario(nomUs)
+        if unUsuario is not None:
+            return unUsuario.getIdUsuario()
+        else:
+            return None
+

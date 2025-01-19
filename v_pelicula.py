@@ -128,14 +128,29 @@ def abrir_ventana_pelicula(pelicula):
                 abrir_ventana_pelicula(pelicula)  # Refrescar la ventana
             except ValueError as e:
                 messagebox.showerror("Error", str(e))
+                # botón para alquilar películaS
 
+        def pulsar_alquilar(tit, a):
+            if GestorGeneral.get_instance().alquilarPelicula(tit, a):
+                messagebox.showinfo("Éxito", "La película se ha alquilado correctamente.")
+                return
+            else:
+                messagebox.showinfo("Ha ocurrido algo", "Es probable que aún tengas la película alquilada.")
+                return
         tk.Button(
             scrollable_frame,
             text="Guardar Reseña",
             command=guardar_resena,
             **estilo_boton
-        ).pack(pady=10)
-    # Botón para cerrar
+        ).pack(pady=20)
+        tk.Button(
+            scrollable_frame,
+            text="Alquilar película",
+            command=lambda: pulsar_alquilar(pelicula.titulo, pelicula.ano),
+            **estilo_boton
+        ).pack(pady=20)
+
+       # Botón para cerrar
     tk.Button(scrollable_frame, text="Cerrar", command=ventana_pelicula.destroy, **estilo_boton).pack(pady=20)
 
 def abrir_ventana_catalogo():
@@ -171,6 +186,7 @@ def abrir_ventana_catalogo():
         item = tree.selection()
         if item:
             pelicula_titulo = tree.item(item, "text")
+
             pelicula_valores = tree.item(item, "values")
             pelicula = gestor.obtener_pelicula_por_titulo_ano(pelicula_titulo, pelicula_valores[0])
             if pelicula:

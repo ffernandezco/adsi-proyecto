@@ -1,3 +1,4 @@
+from GestorAlquileres import GestorAlquileres
 from GestorUsuarios import GestorUsuarios
 from GestorResena import GestorResena
 
@@ -37,6 +38,7 @@ class GestorGeneral:
     def iniciarsesion(self, nombreUsuarioIn, contrasenaIn):
         if GestorUsuarios.get_instance().iniciarsesion(nombreUsuarioIn, contrasenaIn):
             GestorGeneral.nombusuarioactual = GestorUsuarios.get_instance().buscarUsuario(nombreUsuarioIn).getNombreUsuario()
+            GestorGeneral.idUsuarioActual=GestorUsuarios.get_instance().buscarUsuario(nombreUsuarioIn).getIdUsuario()
             return True
         else:
             return False
@@ -64,6 +66,7 @@ class GestorGeneral:
     def modificarDatos(self, nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena):
         return GestorUsuarios.get_instance().modDatos(nombUsuarioAModificar, nombre, apellidos, correo, fechaNacimiento, usuario, contrasena)
 
+
     # Reseñas
     def agregar_resena(self, idUsuario, titulo, ano, puntuacion, comentario):
         from Resena import Resena
@@ -82,3 +85,23 @@ class GestorGeneral:
     def eliminar_resena(self, idUsuario, titulo, ano):
         # Permite eliminar una reseña existente a partir del gestor de puntuaciones
         return self.gestor_resena.eliminar_resena(idUsuario, titulo, ano)
+
+    #Alquiler
+    def alquilarPelicula(self,titulo, ano):
+        # como el botón solo se muestra a los usuarios que han iniciado sesión (por lo tanto ni cuanta eliminada ni sin aceptar) no compruebo
+        idUs= GestorUsuarios.get_instance().idPorUsuario(self.nombusuarioactual)
+        if idUs is not None:
+            GestorAlquileres.get_instance().nuevoAlquiler(idUs, titulo, ano)
+
+    def mostrarHistorial(self):
+        idUs = GestorUsuarios.get_instance().idPorUsuario(self.nombusuarioactual)
+        alquileres= GestorAlquileres.get_instance().mostrarHistorial(idUs)
+        if alquileres:
+            return alquileres  # Retorna la lista de alquileres
+        return []
+    def mostrarPelis(self):
+        idUs = GestorUsuarios.get_instance().idPorUsuario(self.nombusuarioactual)
+        alquileres = GestorAlquileres.get_instance().mostrarPelisNoCaducadas(idUs)
+        if alquileres:
+            return alquileres
+        return []

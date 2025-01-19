@@ -40,6 +40,8 @@ class Usuario:
 
     def esUsuario(self,usuarioIn):
         return usuarioIn == self.nombreUsuario
+    def esUsuarioId(self,usuarioId):
+        return usuarioId == self.idUsuario
 
     def comprobarContrasena(self,contrasenaIn):
         return contrasenaIn==self.contrasena

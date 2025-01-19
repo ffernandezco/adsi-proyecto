@@ -5,6 +5,11 @@ class GestorPelicula:
     def __init__(self, db_name="app_database.sqlite"):
         self.db_name = db_name
 
+    def get_instance(self):
+        if GestorPelicula._instance is None:
+            GestorPelicula._instance = GestorPelicula()
+        return GestorPelicula._instance
+
     def obtener_peliculas(self):
         try:
             conn = sqlite3.connect(self.db_name)
@@ -41,3 +46,4 @@ class GestorPelicula:
         finally:
             if conn:
                 conn.close()
+
