@@ -199,4 +199,5 @@ def pulsar_gestiones_admin(ventana_principal):
 if __name__ == "__main__":
     initialize_database()
     GestorGeneral.get_instance().cargar_datos()
+    print("Nota: para iniciar sesión como administrador para ver sus funciones -> usuario:admin y contraseña:admin123")
     abrir_ventana_principal()
