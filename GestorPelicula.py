@@ -63,3 +63,10 @@ class GestorPelicula:
             if conn:
                 conn.close()
 
+    def agregar_pelicula(self, titulo, ano):
+        """
+        Agrega una película al catálogo de películas.
+        """
+        nueva_pelicula = {"titulo": titulo, "ano": ano}
+        self.peliculas.append(nueva_pelicula)
+        # Puedes guardar esto en la base de datos o mantenerlo en memoria
