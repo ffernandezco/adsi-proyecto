@@ -2,10 +2,7 @@ import sqlite3
 import unittest
 import v_main
 from GestorAlquileres import GestorAlquileres
-from GestorPelicula import GestorPelicula
 from GestorGeneral import GestorGeneral
-from Alquiler import Alquiler
-from Usuario import Usuario
 from GestorUsuarios import GestorUsuarios
 
 class TestAlquilarPelicula(unittest.TestCase):
@@ -53,7 +50,7 @@ class TestAlquilarPelicula(unittest.TestCase):
             with sqlite3.connect("app_database.sqlite") as conn:
                 cursor = conn.cursor()
                 query = """delete from usuario where nombreUsuario=? ;"""
-                cursor.execute(query, ("testUsuario"))
+                cursor.execute(query, ("testUsuario",))
                 query = """delete from alquileres where titulo=? or titulo=? or titulo=? ;"""
                 cursor.execute(query, ("peliculaAlqVisible","peliculaAlqNoVisible","peliculaNoAlq"))
                 query = """delete from pelicula where titulo=? or titulo=? or titulo=? ;"""
@@ -66,13 +63,13 @@ class TestAlquilarPelicula(unittest.TestCase):
 
     def testAlquilarPeliculaNoAlquilada(self):
         # Un usuario intenta alquilar una película que no ha alquilado antes
-        self.assertTrue(self.gg.alquilarPelicula("peliculaNoAlq", "2025"))
+        self.assertTrue(GestorAlquileres.get_instance().nuevoAlquiler(self.idUs, "peliculaNoAlq", "2025"))
     def testAlquilarPeliculaAlquiladaVisible(self):
         # Un usuario intenta alquilar una peli que ya ha alquilado hace menos de dos días
-        self.assertFalse(self.gg.alquilarPelicula("peliculaAlqVisible", "2025"))
+        self.assertFalse(GestorAlquileres.get_instance().nuevoAlquiler(self.idUs, "peliculaAlqVisible", "2025"))
     def testAlquilarPeliculaNoVisible(self):
         # Un usuario intenta alquilar una peli que ya ha alquilado hace más de dos días
-        self.assertTrue(self.gg.alquilarPelicula("peliculaAlqNoVisible", "2025"))
+        self.assertTrue(GestorAlquileres.get_instance().nuevoAlquiler(self.idUs, "peliculaAlqNoVisible", "2025"))
 
 if __name__ == '__main__':
     unittest.main()
