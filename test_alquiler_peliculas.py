@@ -1,6 +1,5 @@
-import unittest
 import sqlite3
-import v_pelicula
+import unittest
 import v_main
 from GestorAlquileres import GestorAlquileres
 from GestorPelicula import GestorPelicula
@@ -24,9 +23,9 @@ class TestAlquilarPelicula(unittest.TestCase):
                 conn.commit()
 
                 # Crear películas
-                cursor.execute("""INSERT INTO pelicula (titulo, ano) VALUES (?, ?);""", ("peliculaNoAlq", "2025"))
-                cursor.execute("""INSERT INTO pelicula (titulo, ano) VALUES (?, ?);""", ("peliculaAlqVisible", "2025"))
-                cursor.execute("""INSERT INTO pelicula (titulo, ano) VALUES (?, ?);""", ("peliculaAlqNoVisible", "2025"))
+                cursor.execute("""INSERT INTO pelicula (titulo, ano,idUsuario) VALUES (?, ?,?);""", ("peliculaNoAlq", "2025", 1))
+                cursor.execute("""INSERT INTO pelicula (titulo, ano, idUsuario) VALUES (?, ?,?);""", ("peliculaAlqVisible", "2025",1))
+                cursor.execute("""INSERT INTO pelicula (titulo, ano, idUsuario) VALUES (?, ?,?);""", ("peliculaAlqNoVisible", "2025",1))
                 conn.commit()
         except sqlite3.Error as e:
             print(f"Error al inicializar la base de datos: {e}")
@@ -43,12 +42,27 @@ class TestAlquilarPelicula(unittest.TestCase):
             with sqlite3.connect("app_database.sqlite") as conn:
                 cursor = conn.cursor()
                 cursor.execute("""INSERT INTO alquileres (idUsuario, titulo, ano, fecha) VALUES (?, ?, ?, ?);""",
-                               (self.idUs, "peliculaAlqVisible", "2025", "2025-01-19"))
+                               (self.idUs, "peliculaAlqVisible", "2025", "2025-01-18"))
                 cursor.execute("""INSERT INTO alquileres (idUsuario, titulo, ano, fecha) VALUES (?, ?, ?, ?);""",
                                (self.idUs, "peliculaAlqNoVisible", "2025", "2025-01-01"))
                 conn.commit()
         except sqlite3.Error as e:
             print(f"Error al registrar los alquileres: {e}")
+    def tearDown(self):
+        try:
+            with sqlite3.connect("app_database.sqlite") as conn:
+                cursor = conn.cursor()
+                query = """delete from usuario where nombreUsuario=? ;"""
+                cursor.execute(query, ("testUsuario"))
+                query = """delete from alquileres where titulo=? or titulo=? or titulo=? ;"""
+                cursor.execute(query, ("peliculaAlqVisible","peliculaAlqNoVisible","peliculaNoAlq"))
+                query = """delete from pelicula where titulo=? or titulo=? or titulo=? ;"""
+                cursor.execute(query, ("peliculaAlqVisible", "peliculaAlqNoVisible", "peliculaNoAlq"))
+                conn.commit()
+        except sqlite3.Error as e:
+            print(f"Error al registrar el usuario: {e}")
+            return False
+
 
     def testAlquilarPeliculaNoAlquilada(self):
         # Un usuario intenta alquilar una película que no ha alquilado antes
@@ -59,7 +73,6 @@ class TestAlquilarPelicula(unittest.TestCase):
     def testAlquilarPeliculaNoVisible(self):
         # Un usuario intenta alquilar una peli que ya ha alquilado hace más de dos días
         self.assertTrue(self.gg.alquilarPelicula("peliculaAlqNoVisible", "2025"))
-
 
 if __name__ == '__main__':
     unittest.main()
