@@ -33,8 +33,8 @@ class GestorAlquileres:
                with sqlite3.connect(self.db_path) as conn:
                     cursor = conn.cursor()
 
-                    # Primero comprobamos si ya existe un alquiler con esos parámetros
-                    query_check = """
+                    # Primero comprobamos si ya existe un alquiler visible
+                    query= """
                       SELECT 1
                       FROM alquileres
                       WHERE idUsuario = ?
@@ -42,16 +42,15 @@ class GestorAlquileres:
                         AND ano = ?
                         AND fecha IN (DATE('now'), DATE('now', '-1 day'))
                       """
-                    cursor.execute(query_check, (idUsuario, titulo, ano))
+                    cursor.execute(query, (idUsuario, titulo, ano))
                     result = cursor.fetchone()
 
-                    # Si no existe, hacemos el INSERT
                     if not result:
-                         query_insert = """
+                         query= """
                           INSERT INTO alquileres (idUsuario, titulo, ano, fecha)
                           VALUES (?, ?, ?, CURRENT_DATE)
                           """
-                         cursor.execute(query_insert, (idUsuario, titulo, ano))
+                         cursor.execute(query, (idUsuario, titulo, ano))
                          conn.commit()
                          return True
                     else:

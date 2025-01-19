@@ -4,7 +4,9 @@ from GestorPelicula import GestorPelicula
 from GestorResena import GestorResena
 from GestorGeneral import GestorGeneral
 from Resena import Resena
-from estilo import estilo_boton
+from estilo import estilo_boton, centrar_ventana
+
+
 
 def abrir_ventana_pelicula(pelicula):
     """
@@ -16,7 +18,7 @@ def abrir_ventana_pelicula(pelicula):
 
     ventana_pelicula = tk.Toplevel()
     ventana_pelicula.title(f"Detalles de {pelicula.titulo}")
-    ventana_pelicula.geometry("500x600")
+    ventana_pelicula.geometry(f"500x600+{(ventana_pelicula.winfo_screenwidth() // 2) - (500 // 2)}+{(ventana_pelicula.winfo_screenheight() // 2 - 60) - (600 // 2)}")
     ventana_pelicula.configure(bg="white")
 
     # Añadir barra de desplazamiento
@@ -90,14 +92,17 @@ def abrir_ventana_pelicula(pelicula):
     tk.Button(scrollable_frame, text="Cerrar", command=ventana_pelicula.destroy, **estilo_boton).pack(pady=10)
 
 def abrir_ventana_catalogo():
+
     """
     Muestra el catálogo actualizado de películas en una ventana nueva.
     """
-    gestor = GestorPelicula()
+    gestor = GestorGeneral()
+    peliculas = gestor.verCatalogo()
 
-    ventana_catalogo = tk.Toplevel()
+    ventana_catalogo = tk.Tk()
     ventana_catalogo.title("Catálogo de Películas")
-    ventana_catalogo.geometry("700x450")
+    centrar_ventana(ventana_catalogo)
+    ventana_catalogo.geometry("600x450")
     ventana_catalogo.configure(bg="white")
 
     tk.Label(ventana_catalogo, text="Catálogo de Películas", bg="white", fg="black", font=("Arial", 16)).pack(pady=10)
@@ -123,11 +128,22 @@ def abrir_ventana_catalogo():
     def mostrar_pelicula(event):
         item = tree.selection()
         if item:
-            titulo = tree.item(item, "text")
-            pelicula = gestor.obtener_pelicula_por_titulo(titulo)
+
+            pelicula_titulo = tree.item(item, "text")
+
+            pelicula_valores = tree.item(item, "values")
+            pelicula = gestor.buscarPelicula(pelicula_titulo, pelicula_valores[0])
             if pelicula:
                 abrir_ventana_pelicula(pelicula)
 
     tree.bind("<Double-1>", mostrar_pelicula)
 
-    tk.Button(ventana_catalogo, text="Cerrar", command=ventana_catalogo.destroy, **estilo_boton).pack(pady=10)
+
+    # Botón para cerrar
+    from v_main import abrir_ventana_principal
+    tk.Button(
+        ventana_catalogo,
+        text="Cerrar",
+        command=lambda: [ventana_catalogo.destroy(),abrir_ventana_principal()],
+        **estilo_boton
+    ).pack(pady=10)
