@@ -3,6 +3,7 @@ from estilo import estilo_boton, fuente_titulo, fuente_etiqueta, centrar_ventana
 from v_elimCuentas import abrir_ventana_elimCuentas
 from v_modDatosAdmin import abrir_ventana_modDatosAdmin
 from v_soliRegistros import abrir_ventana_soliRegistros
+from v_solicitudes_peliculas import abrir_ventana_solicitudes
 
 
 def abrir_ventana_admin():
@@ -21,6 +22,9 @@ def abrir_ventana_admin():
                                                                                        abrir_ventana_elimCuentas()]).pack(pady=10)
     tk.Button(ventana_admin, text="Modificar Datos de Usuarios", **estilo_boton, command=lambda: [ventana_admin.destroy(),
                                                                                                   abrir_ventana_modDatosAdmin()]).pack(pady=10)
+    tk.Button(ventana_admin, text="Solicitudes de peliculas", **estilo_boton,
+              command=lambda: [ventana_admin.destroy(),
+                               abrir_ventana_solicitudes()]).pack(pady=10)
 
     tk.Button(ventana_admin, text="Volver", **estilo_boton, command=lambda: [ventana_admin.destroy(), abrir_ventana_principal()]).pack(pady=20)
 

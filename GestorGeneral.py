@@ -5,7 +5,7 @@ from GestorResena import GestorResena
 
 class GestorGeneral:
     _instance = None  # Variable de clase para almacenar la única instancia
-    nombusuarioactual = None  # Atributo estático
+    nombusuarioactual = "iratxe2"#None  # Atributo estático
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:

@@ -5,6 +5,7 @@ from tkinter import messagebox, ttk
 from GestorGeneral import GestorGeneral
 from estilo import estilo_boton, centrar_ventana
 from v_admin import abrir_ventana_admin
+from v_catalogo_ampliado import abrir_ventana_catalogo_ampliado
 from v_modDatos import abrir_ventana_modDatos
 
 from v_pelicula import abrir_ventana_catalogo
@@ -150,7 +151,7 @@ def abrir_ventana_principal():
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton, command=abrir_ventana_catalogo_ampliado).pack(side="left", padx=10)
 =======
     tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command=lambda: [ventana_principal.destroy(), abrir_ventana_catalogo()]).pack(side="left", padx=10)
-    tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
+    tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton, command=abrir_ventana_catalogo_ampliado).pack(side="left", padx=10)
 
 >>>>>>> parent of fdc6540 (Merge pull request #29 from ffernandezco/17-lista-solicitudes)
     if nombreUsuario_actual is not None:

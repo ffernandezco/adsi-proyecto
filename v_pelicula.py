@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from GestorPelicula import GestorPelicula
 from GestorResena import GestorResena
 from GestorGeneral import GestorGeneral
 from Resena import Resena
