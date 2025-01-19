@@ -50,9 +50,5 @@ def abrir_ventana_solicitudes():
         boton_aceptar = tk.Button(frame, text="Aceptar", command=lambda s=solicitud: aceptar_solicitud(s))
         boton_aceptar.pack(side=tk.RIGHT, padx=10)
 
-    from v_admin import abrir_ventana_admin
-    # Botón de volver
-    tk.Button(ventana_solicitudes, text="Volver", **estilo_boton,
-              command=lambda: [ventana_solicitudes.destroy(), abrir_ventana_admin()]).pack(pady=20)
-
     ventana_solicitudes.mainloop()
+

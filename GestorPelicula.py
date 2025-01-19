@@ -53,4 +53,4 @@ class GestorPelicula:
         """
         nueva_pelicula = {"titulo": titulo, "ano": ano}
         self.peliculas.append(nueva_pelicula)
-        # Puedes guardar esto en la base de datos o mantenerlo en memoria
+
