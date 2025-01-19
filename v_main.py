@@ -6,7 +6,7 @@ from GestorGeneral import GestorGeneral
 from estilo import estilo_boton, centrar_ventana
 from v_admin import abrir_ventana_admin
 from v_modDatos import abrir_ventana_modDatos
-from v_catalogo_ampliado import abrir_ventana_catalogo_ampliado
+
 from v_pelicula import abrir_ventana_catalogo
 
 
@@ -145,8 +145,14 @@ def abrir_ventana_principal():
     catalogo_frame.pack(pady=20)
 
     # Agregar botones de ver catálogo
+<<<<<<< HEAD
     tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command= abrir_ventana_catalogo).pack(side="left", padx=10)
     tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton, command=abrir_ventana_catalogo_ampliado).pack(side="left", padx=10)
+=======
+    tk.Button(catalogo_frame, text="Ver catálogo", **estilo_boton, command=lambda: [ventana_principal.destroy(), abrir_ventana_catalogo()]).pack(side="left", padx=10)
+    tk.Button(catalogo_frame, text="Ver catálogo ampliado", **estilo_boton).pack(side="left", padx=10)
+
+>>>>>>> parent of fdc6540 (Merge pull request #29 from ffernandezco/17-lista-solicitudes)
     if nombreUsuario_actual is not None:
         tk.Label(ventana_principal, text=f"Bienvenido/a, {nombreUsuario_actual}", bg="white", fg="black").pack(pady=10)
 
